@@ -20,6 +20,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
 
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
     <!-- Extensions defined by the plugin.
@@ -28,4 +29,13 @@
         <toolWindow id="MyToolWindow" factoryClass="at.hannos.aiagentclibridge.MyToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
     </extensions>
+
+    <actions>
+        <action id="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
+                class="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
+                text="Send Selection to Terminal"
+                description="Send selected editor text to terminal">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
