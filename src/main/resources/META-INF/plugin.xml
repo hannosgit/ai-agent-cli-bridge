@@ -28,6 +28,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="MyToolWindow" factoryClass="at.hannos.aiagentclibridge.MyToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
+        <applicationConfigurable
+                parentId="tools"
+                id="at.hannos.aiagentclibridge.settings"
+                displayName="AI Agent CLI Bridge"
+                instance="at.hannos.aiagentclibridge.AiAgentCliBridgeConfigurable"/>
     </extensions>
 
     <actions>

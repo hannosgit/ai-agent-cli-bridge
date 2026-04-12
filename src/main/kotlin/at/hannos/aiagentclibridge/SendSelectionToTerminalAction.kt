@@ -15,8 +15,6 @@ import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
 
-private const val TERMINAL_TITLE = "AI CLI Tool"
-
 class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
 
     override fun actionPerformed(event: AnActionEvent) {
@@ -47,8 +45,9 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         try {
             val terminalManager = TerminalToolWindowManager.getInstance(project)
             val workingDirectory = project.basePath
-            val terminalWidget = findTerminalWidgetByTitle(terminalManager, TERMINAL_TITLE)
-                ?: terminalManager.createShellWidget(workingDirectory, TERMINAL_TITLE, true, true)
+            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
+            val terminalWidget = findTerminalWidgetByTitle(terminalManager, terminalTitle)
+                ?: terminalManager.createShellWidget(workingDirectory, terminalTitle, true, true)
 
             terminalWidget.sendCommandToExecute(command)
             ToolWindowManager.getInstance(project)
