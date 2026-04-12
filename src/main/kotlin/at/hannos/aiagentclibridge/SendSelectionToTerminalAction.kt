@@ -45,9 +45,16 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         try {
             val terminalManager = TerminalToolWindowManager.getInstance(project)
             val workingDirectory = project.basePath
-            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
-            val terminalWidget = findTerminalWidgetByTitle(terminalManager, terminalTitle)
+            val settings = AiAgentCliBridgeSettings.getInstance().state
+            val terminalTitle = settings.terminalTitle
+            val launchProgramWhenNoTerminalFound = settings.launchProgramWhenNoTerminalFound.trim()
+            val existingTerminal = findTerminalWidgetByTitle(terminalManager, terminalTitle)
+            val terminalWidget = existingTerminal
                 ?: terminalManager.createShellWidget(workingDirectory, terminalTitle, true, true)
+
+            if (existingTerminal == null && launchProgramWhenNoTerminalFound.isNotBlank()) {
+                terminalWidget.sendCommandToExecute(launchProgramWhenNoTerminalFound)
+            }
 
             terminalWidget.sendCommandToExecute(command)
             ToolWindowManager.getInstance(project)
