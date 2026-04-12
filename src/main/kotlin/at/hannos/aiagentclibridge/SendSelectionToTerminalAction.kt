@@ -44,7 +44,7 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         try {
             val terminalManager = TerminalToolWindowManager.getInstance(project)
             val workingDirectory = project.basePath
-            val terminalWidget = terminalManager.createShellWidget(workingDirectory, "Selection", true, true)
+            val terminalWidget = terminalManager.createShellWidget(workingDirectory, "AI CLI Tool", true, true)
 
             terminalWidget.sendCommandToExecute(command)
             ToolWindowManager.getInstance(project)
