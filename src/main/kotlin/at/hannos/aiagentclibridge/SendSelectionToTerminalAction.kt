@@ -10,9 +10,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.terminal.ui.TerminalWidget
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
+
+private const val TERMINAL_TITLE = "AI CLI Tool"
 
 class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
 
@@ -44,11 +47,16 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         try {
             val terminalManager = TerminalToolWindowManager.getInstance(project)
             val workingDirectory = project.basePath
-            val terminalWidget = terminalManager.createShellWidget(workingDirectory, "AI CLI Tool", true, true)
+            val terminalWidget = findTerminalWidgetByTitle(terminalManager, TERMINAL_TITLE)
+                ?: terminalManager.createShellWidget(workingDirectory, TERMINAL_TITLE, true, true)
 
             terminalWidget.sendCommandToExecute(command)
             ToolWindowManager.getInstance(project)
-                .notifyByBalloon(TerminalToolWindowFactory.TOOL_WINDOW_ID, MessageType.INFO, "Sent selection reference to terminal")
+                .notifyByBalloon(
+                    TerminalToolWindowFactory.TOOL_WINDOW_ID,
+                    MessageType.INFO,
+                    "Sent selection reference to terminal"
+                )
         } catch (_: Exception) {
             notifyError(project, "Failed to send selection reference to terminal")
         }
@@ -82,5 +90,14 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
             ),
             project,
         )
+    }
+
+    private fun findTerminalWidgetByTitle(
+        terminalManager: TerminalToolWindowManager,
+        title: String,
+    ): TerminalWidget? {
+        return terminalManager.terminalWidgets.find {
+            it.terminalTitle.buildFullTitle() === title
+        }
     }
 }
