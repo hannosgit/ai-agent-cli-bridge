@@ -97,7 +97,7 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
     }
 
     private fun sendTextWithoutExecuting(terminalWidget: TerminalWidget, text: String): Boolean {
-        val connector = terminalWidget.ttyConnectorAccessor.ttyConnector ?: return false
+        val connector = terminalWidget.ttyConnector ?: return false
         return try {
             connector.write(text)
             true
