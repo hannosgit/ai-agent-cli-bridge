@@ -42,5 +42,11 @@
                 description="Send selected editor text to terminal">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+        <action id="at.hannos.aiagentclibridge.SendFileReferenceToTerminalAction"
+                class="at.hannos.aiagentclibridge.SendFileReferenceToTerminalAction"
+                text="Send File Reference to Terminal"
+                description="Send selected file or folder reference to terminal">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
     </actions>
 </idea-plugin>
