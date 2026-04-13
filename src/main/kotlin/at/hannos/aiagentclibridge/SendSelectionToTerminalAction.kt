@@ -7,8 +7,11 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.ui.TerminalWidget
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
@@ -35,13 +38,7 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
             return
         }
 
-        val selectionStart = selectionModel.selectionStart
-        val selectionEnd = selectionModel.selectionEnd
-        val endOffsetForLine = (selectionEnd - 1).coerceAtLeast(selectionStart)
-        val startLine = editor.document.getLineNumber(selectionStart) + 1
-        val endLine = editor.document.getLineNumber(endOffsetForLine) + 1
-        val filePath = toProjectRelativePath(project, virtualFile.path)
-        val command = "@${filePath}#L${startLine}-${endLine}"
+        val command = buildReference(selectionModel, editor, project, virtualFile)
 
         try {
             val terminalManager = TerminalToolWindowManager.getInstance(project)
@@ -64,6 +61,26 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         } catch (_: Exception) {
             notifyError(project, "Failed to send selection reference to terminal")
         }
+    }
+
+    private fun buildReference(
+        selectionModel: SelectionModel,
+        editor: Editor,
+        project: Project,
+        virtualFile: VirtualFile
+    ): String {
+        val selectionStart = selectionModel.selectionStart
+        val selectionEnd = selectionModel.selectionEnd
+        val endOffsetForLine = (selectionEnd - 1).coerceAtLeast(selectionStart)
+        val startLine = editor.document.getLineNumber(selectionStart) + 1
+        val endLine = editor.document.getLineNumber(endOffsetForLine) + 1
+        val filePath = toProjectRelativePath(project, virtualFile.path)
+
+        if (startLine == endLine) {
+            return "@${filePath}#L${startLine}"
+        }
+
+        return "@${filePath}#L${startLine}-${endLine}"
     }
 
     override fun update(event: AnActionEvent) {
