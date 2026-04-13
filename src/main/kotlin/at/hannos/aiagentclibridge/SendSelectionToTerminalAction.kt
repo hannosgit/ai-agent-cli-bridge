@@ -1,14 +1,11 @@
 package at.hannos.aiagentclibridge
 
+import at.hannos.aiagentclibridge.TerminalActionSupport.buildReference
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.SelectionModel
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
@@ -56,26 +53,6 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         } catch (_: Exception) {
             TerminalActionSupport.notifyError(project, "Failed to send selection reference to terminal")
         }
-    }
-
-    private fun buildReference(
-        selectionModel: SelectionModel,
-        editor: Editor,
-        project: Project,
-        virtualFile: VirtualFile
-    ): String {
-        val selectionStart = selectionModel.selectionStart
-        val selectionEnd = selectionModel.selectionEnd
-        val endOffsetForLine = (selectionEnd - 1).coerceAtLeast(selectionStart)
-        val startLine = editor.document.getLineNumber(selectionStart) + 1
-        val endLine = editor.document.getLineNumber(endOffsetForLine) + 1
-        val filePath = TerminalActionSupport.toProjectRelativePath(project, virtualFile.path)
-
-        if (startLine == endLine) {
-            return "@${filePath}#L${startLine}"
-        }
-
-        return "@${filePath}#L${startLine}-${endLine}"
     }
 
     override fun update(event: AnActionEvent) {

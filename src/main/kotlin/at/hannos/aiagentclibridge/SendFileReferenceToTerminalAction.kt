@@ -1,5 +1,6 @@
 package at.hannos.aiagentclibridge
 
+import at.hannos.aiagentclibridge.TerminalActionSupport.buildReference
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -18,7 +19,7 @@ class SendFileReferenceToTerminalAction : AnAction("Send File Reference to Termi
             return
         }
 
-        val command = "@${TerminalActionSupport.toProjectRelativePath(project, virtualFile.path)}"
+        val command = buildReference(null, null, project, virtualFile)
 
         try {
             val terminalManager = TerminalToolWindowManager.getInstance(project)
