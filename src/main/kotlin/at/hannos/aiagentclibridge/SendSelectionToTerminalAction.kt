@@ -15,6 +15,7 @@ import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
 
+
 class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
 
     override fun actionPerformed(event: AnActionEvent) {
@@ -50,19 +51,16 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
             val launchProgramWhenNoTerminalFound = settings.launchProgramWhenNoTerminalFound.trim()
             val existingTerminal = findTerminalWidgetByTitle(terminalManager, terminalTitle)
             val terminalWidget = existingTerminal
-                ?: terminalManager.createShellWidget(workingDirectory, terminalTitle, true, true)
+                ?: terminalManager.createShellWidget(workingDirectory, terminalTitle, true, false)
 
             if (existingTerminal == null && launchProgramWhenNoTerminalFound.isNotBlank()) {
                 terminalWidget.sendCommandToExecute(launchProgramWhenNoTerminalFound)
             }
 
-            terminalWidget.sendCommandToExecute(command)
-            ToolWindowManager.getInstance(project)
-                .notifyByBalloon(
-                    TerminalToolWindowFactory.TOOL_WINDOW_ID,
-                    MessageType.INFO,
-                    "Sent selection reference to terminal"
-                )
+            if (!sendTextWithoutExecuting(terminalWidget, command)) {
+                notifyError(project, "Failed to insert selection reference into terminal prompt")
+                return
+            }
         } catch (_: Exception) {
             notifyError(project, "Failed to send selection reference to terminal")
         }
@@ -98,12 +96,22 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
         )
     }
 
+    private fun sendTextWithoutExecuting(terminalWidget: TerminalWidget, text: String): Boolean {
+        val connector = terminalWidget.ttyConnectorAccessor.ttyConnector ?: return false
+        return try {
+            connector.write(text)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     private fun findTerminalWidgetByTitle(
         terminalManager: TerminalToolWindowManager,
         title: String,
     ): TerminalWidget? {
         return terminalManager.terminalWidgets.find {
-            it.terminalTitle.buildFullTitle() === title
+            it.terminalTitle.buildFullTitle() == title
         }
     }
 }
