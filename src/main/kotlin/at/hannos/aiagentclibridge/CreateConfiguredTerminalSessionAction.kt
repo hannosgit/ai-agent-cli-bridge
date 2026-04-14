@@ -3,6 +3,8 @@ package at.hannos.aiagentclibridge
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.fileEditor.FileEditorManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 
 
@@ -10,6 +12,18 @@ class CreateConfiguredTerminalSessionAction : AnAction("Open Configured AI Termi
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
+
+        if (TerminalActionSupport.terminalIsFound(event)) {
+            val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
+                ?: FileEditorManager.getInstance(project).selectedFiles.firstOrNull()
+
+            if (virtualFile != null) {
+                val command = TerminalActionSupport.buildReference(null, null, project, virtualFile)
+                TerminalActionSupport.sendToTerminal(project, command)
+            }
+            return
+        }
+
         val settings = AiAgentCliBridgeSettings.getInstance().state
         val terminalTitle = settings.terminalTitle
         val launchProgram = settings.launchProgramWhenNoTerminalFound
