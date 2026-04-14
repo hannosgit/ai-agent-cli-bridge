@@ -58,8 +58,9 @@ object TerminalActionSupport {
     }
 
     fun hasTerminalWithTitle(project: Project, title: String): Boolean {
-        val tabs = TerminalToolWindowTabsManager.getInstance(project).tabs
-        return tabs.any { it.view.title.buildFullTitle() == title }
+        val findTerminalWidgetByTitle = findTerminalWidgetByTitle(project, title)
+
+        return findTerminalWidgetByTitle == null
     }
 
     fun buildReference(
