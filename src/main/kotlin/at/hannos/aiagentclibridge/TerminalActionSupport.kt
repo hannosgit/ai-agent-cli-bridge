@@ -7,14 +7,25 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.ToolWindowManager
-import com.intellij.terminal.ui.TerminalWidget
-import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
-import org.jetbrains.plugins.terminal.TerminalToolWindowManager
+import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTab
+import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
 import java.nio.file.Path
 
 
 object TerminalActionSupport {
+
+    fun sendToTerminal(project: Project, command: String) {
+        try {
+            val settings = AiAgentCliBridgeSettings.getInstance().state
+            val terminalTitle = settings.terminalTitle
+            val windowTab =
+                findTerminalWidgetByTitle(project, terminalTitle) ?: return
+
+            windowTab.view.sendText(command)
+        } catch (_: Exception) {
+            notifyError(project, "Failed to send selection reference to terminal")
+        }
+    }
 
     fun toProjectRelativePath(project: Project, filePath: String): String {
         val basePath = project.basePath ?: return filePath
@@ -39,27 +50,16 @@ object TerminalActionSupport {
     }
 
     fun findTerminalWidgetByTitle(
-        terminalManager: TerminalToolWindowManager,
+        project: Project,
         title: String,
-    ): TerminalWidget? {
-        return terminalManager.terminalWidgets.find {
-            it.terminalTitle.buildFullTitle() == title
-        }
+    ): TerminalToolWindowTab? {
+        val tabs = TerminalToolWindowTabsManager.getInstance(project).tabs
+        return tabs.find { it.view.title.buildFullTitle() == title }
     }
 
     fun hasTerminalWithTitle(project: Project, title: String): Boolean {
-        val terminalManager = TerminalToolWindowManager.getInstance(project)
-        if (findTerminalWidgetByTitle(terminalManager, title) != null) {
-            return true
-        }
-
-        val terminalWindow = ToolWindowManager.getInstance(project)
-            .getToolWindow(TerminalToolWindowFactory.TOOL_WINDOW_ID)
-            ?: return false
-
-        return terminalWindow.contentManager.contents.any {
-            it.displayName == title
-        }
+        val tabs = TerminalToolWindowTabsManager.getInstance(project).tabs
+        return tabs.any { it.view.title.buildFullTitle() == title }
     }
 
     fun buildReference(
@@ -87,13 +87,4 @@ object TerminalActionSupport {
         return "@${filePath}#L${startLine}-${endLine} "
     }
 
-    fun sendTextWithoutExecuting(terminalWidget: TerminalWidget, text: String): Boolean {
-        val connector = terminalWidget.ttyConnector ?: return false
-        return try {
-            connector.write(text)
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
 }

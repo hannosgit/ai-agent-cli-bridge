@@ -32,27 +32,7 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
 
         val command = buildReference(selectionModel, editor, project, virtualFile)
 
-        try {
-            val terminalManager = TerminalToolWindowManager.getInstance(project)
-            val workingDirectory = project.basePath
-            val settings = AiAgentCliBridgeSettings.getInstance().state
-            val terminalTitle = settings.terminalTitle
-            val launchProgramWhenNoTerminalFound = settings.launchProgramWhenNoTerminalFound.trim()
-            val existingTerminal = TerminalActionSupport.findTerminalWidgetByTitle(terminalManager, terminalTitle)
-            val terminalWidget = existingTerminal
-                ?: terminalManager.createShellWidget(workingDirectory, terminalTitle, true, false)
-
-            if (existingTerminal == null && launchProgramWhenNoTerminalFound.isNotBlank()) {
-                terminalWidget.sendCommandToExecute(launchProgramWhenNoTerminalFound)
-            }
-
-            if (!TerminalActionSupport.sendTextWithoutExecuting(terminalWidget, command)) {
-                TerminalActionSupport.notifyError(project, "Failed to insert selection reference into terminal prompt")
-                return
-            }
-        } catch (_: Exception) {
-            TerminalActionSupport.notifyError(project, "Failed to send selection reference to terminal")
-        }
+        TerminalActionSupport.sendToTerminal(project, command)
     }
 
     override fun update(event: AnActionEvent) {
