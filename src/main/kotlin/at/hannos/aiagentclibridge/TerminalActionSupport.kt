@@ -20,11 +20,19 @@ object TerminalActionSupport {
             val settings = AiAgentCliBridgeSettings.getInstance().state
             val terminalTitle = settings.terminalTitle
             val windowTab =
-                findTerminalWidgetByTitle(project, terminalTitle) ?: return
+                findTerminalWidgetByTitle(project, terminalTitle)
 
-            windowTab.sendText(command)
+            if (windowTab == null) {
+                notifyError(project, "Failed to find configured terminal tab: $terminalTitle")
+                return
+            }
+
+            if (!windowTab.sendText(command)) {
+                notifyError(project, "Failed to send selection reference to terminal")
+            }
         } catch (_: Exception) {
             notifyError(project, "Failed to send selection reference to terminal")
+            return
         }
     }
 
