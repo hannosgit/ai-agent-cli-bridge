@@ -33,6 +33,12 @@
     </extensions>
 
     <actions>
+        <action id="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
+                class="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
+                text="Open Configured AI Terminal"
+                description="Open a new configured terminal tab and launch configured program">
+            <add-to-group group-id="MainToolbarRight" anchor="last"/>
+        </action>
         <action id="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
                 class="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
                 text="Send Selection to Terminal"
