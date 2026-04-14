@@ -2,9 +2,9 @@ package at.hannos.aiagentclibridge
 
 import com.intellij.terminal.ui.TerminalWidget
 
-class ClassicAiTerminal(val terminalToolWindowTab: TerminalWidget?) : AiTerminal {
+class ClassicAiTerminal(private val terminalWidget: TerminalWidget) : AiTerminal {
 
     override fun sendText(text: String) {
-        terminalToolWindowTab?.ttyConnector?.write(text)
+        terminalWidget.ttyConnector?.write(text)
     }
 }
