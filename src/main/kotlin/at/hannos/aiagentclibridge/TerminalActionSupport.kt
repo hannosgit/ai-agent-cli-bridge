@@ -62,7 +62,7 @@ object TerminalActionSupport {
         return hasConfiguredTerminal
     }
 
-    fun findTerminalWidgetByTitle(
+    private fun findTerminalWidgetByTitle(
         project: Project,
         title: String,
     ): TerminalToolWindowTab? {
@@ -70,7 +70,7 @@ object TerminalActionSupport {
         return tabs.find { it.view.title.buildFullTitle() == title }
     }
 
-    fun hasTerminalWithTitle(project: Project, title: String): Boolean {
+    private fun hasTerminalWithTitle(project: Project, title: String): Boolean {
         val findTerminalWidgetByTitle = findTerminalWidgetByTitle(project, title)
 
         return findTerminalWidgetByTitle !== null
