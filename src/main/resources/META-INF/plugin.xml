@@ -36,19 +36,19 @@
         <action id="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
                 class="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
                 text="Open Configured AI Terminal"
-                description="Open a new configured terminal tab and launch configured program">
+                description="Open a new terminal tab and launch configured program">
             <add-to-group group-id="MainToolbarRight" anchor="last"/>
         </action>
         <action id="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
                 class="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
-                text="Send Selection to Terminal"
-                description="Send selected editor text to terminal">
+                text="Send Selection to AI Tool"
+                description="Send selected editor text to AI tool">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="at.hannos.aiagentclibridge.SendFileReferenceToTerminalAction"
                 class="at.hannos.aiagentclibridge.SendFileReferenceToTerminalAction"
-                text="Send File Reference to Terminal"
-                description="Send selected file or folder reference to terminal">
+                text="Send File Reference to AI Tool"
+                description="Send selected file or folder reference to AI Tool">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
     </actions>

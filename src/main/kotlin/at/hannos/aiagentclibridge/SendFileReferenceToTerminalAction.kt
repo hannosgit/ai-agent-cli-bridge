@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 
 
-class SendFileReferenceToTerminalAction : AnAction("Send File Reference to Terminal") {
+class SendFileReferenceToTerminalAction : AnAction("Send File Reference to AI Tool") {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return

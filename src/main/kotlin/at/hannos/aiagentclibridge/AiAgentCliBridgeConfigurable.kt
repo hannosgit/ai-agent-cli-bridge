@@ -10,7 +10,7 @@ import javax.swing.JPanel
 class AiAgentCliBridgeConfigurable : Configurable {
     private var component: JPanel? = null
     private var terminalTitleField: JBTextField? = null
-    private var launchProgramWhenNoTerminalFoundField: JBTextField? = null
+    private var aiToolCommand: JBTextField? = null
 
     override fun getDisplayName(): String = "AI Agent CLI Bridge"
 
@@ -18,10 +18,10 @@ class AiAgentCliBridgeConfigurable : Configurable {
         val terminalField = JBTextField()
         val launchProgramField = JBTextField()
         terminalTitleField = terminalField
-        launchProgramWhenNoTerminalFoundField = launchProgramField
+        aiToolCommand = launchProgramField
         val panel = FormBuilder.createFormBuilder()
             .addLabeledComponent("Terminal title:", terminalField)
-            .addLabeledComponent("Launch program when no terminal found:", launchProgramField)
+            .addLabeledComponent("Launch AI tool command:", launchProgramField)
             .addComponentFillVertically(JPanel(), 0)
             .panel
         component = panel
@@ -31,25 +31,25 @@ class AiAgentCliBridgeConfigurable : Configurable {
     override fun isModified(): Boolean {
         val state = AiAgentCliBridgeSettings.getInstance().state
         return terminalTitleField?.text != state.terminalTitle ||
-            launchProgramWhenNoTerminalFoundField?.text != state.launchProgramWhenNoTerminalFound
+            aiToolCommand?.text != state.launchProgramWhenNoTerminalFound
     }
 
     @Throws(ConfigurationException::class)
     override fun apply() {
         val state = AiAgentCliBridgeSettings.getInstance().state
         state.terminalTitle = terminalTitleField?.text ?: ""
-        state.launchProgramWhenNoTerminalFound = launchProgramWhenNoTerminalFoundField?.text ?: ""
+        state.launchProgramWhenNoTerminalFound = aiToolCommand?.text ?: ""
     }
 
     override fun reset() {
         val state = AiAgentCliBridgeSettings.getInstance().state
         terminalTitleField?.text = state.terminalTitle
-        launchProgramWhenNoTerminalFoundField?.text = state.launchProgramWhenNoTerminalFound
+        aiToolCommand?.text = state.launchProgramWhenNoTerminalFound
     }
 
     override fun disposeUIResources() {
         component = null
         terminalTitleField = null
-        launchProgramWhenNoTerminalFoundField = null
+        aiToolCommand = null
     }
 }

@@ -11,7 +11,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 
 
-class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
+class SendSelectionToTerminalAction : AnAction("Send Selection to AI Tool") {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
