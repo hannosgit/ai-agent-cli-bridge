@@ -1,6 +1,7 @@
 package at.hannos.aiagentclibridge
 
 import at.hannos.aiagentclibridge.TerminalActionSupport.buildReference
+import at.hannos.aiagentclibridge.TerminalActionSupport.terminalIsFound
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -23,17 +24,14 @@ class SendFileReferenceToTerminalAction : AnAction("Send File Reference to Termi
     }
 
     override fun update(event: AnActionEvent) {
-        val project = event.project
         val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        val hasConfiguredTerminal = if (project != null) {
-            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
-            TerminalActionSupport.hasTerminalWithTitle(project, terminalTitle)
-        } else {
-            false
+        if (virtualFile === null) {
+            return
         }
 
-        event.presentation.isEnabledAndVisible = project != null && virtualFile != null && hasConfiguredTerminal
+        event.presentation.isEnabledAndVisible = terminalIsFound(event)
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 }
+

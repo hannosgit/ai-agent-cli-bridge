@@ -3,6 +3,7 @@ package at.hannos.aiagentclibridge
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
@@ -49,6 +50,18 @@ object TerminalActionSupport {
         )
     }
 
+    fun terminalIsFound(event: AnActionEvent): Boolean {
+        val project = event.project
+        if (project === null) {
+            return false
+        }
+        val hasConfiguredTerminal = run {
+            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
+            hasTerminalWithTitle(project, terminalTitle)
+        }
+        return hasConfiguredTerminal
+    }
+
     fun findTerminalWidgetByTitle(
         project: Project,
         title: String,
@@ -60,7 +73,7 @@ object TerminalActionSupport {
     fun hasTerminalWithTitle(project: Project, title: String): Boolean {
         val findTerminalWidgetByTitle = findTerminalWidgetByTitle(project, title)
 
-        return findTerminalWidgetByTitle == null
+        return findTerminalWidgetByTitle !== null
     }
 
     fun buildReference(

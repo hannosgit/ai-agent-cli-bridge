@@ -1,6 +1,7 @@
 package at.hannos.aiagentclibridge
 
 import at.hannos.aiagentclibridge.TerminalActionSupport.buildReference
+import at.hannos.aiagentclibridge.TerminalActionSupport.terminalIsFound
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -8,7 +9,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
-import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 
 
 class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
@@ -36,17 +36,13 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
     }
 
     override fun update(event: AnActionEvent) {
-        val project = event.project
         val editor = event.getData(CommonDataKeys.EDITOR)
         val hasSelection = editor?.selectionModel?.hasSelection() == true
-        val hasConfiguredTerminal = if (project != null) {
-            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
-            TerminalActionSupport.hasTerminalWithTitle(project, terminalTitle)
-        } else {
-            false
+        if (!hasSelection) {
+            return
         }
 
-        event.presentation.isEnabledAndVisible = project != null && hasSelection && hasConfiguredTerminal
+        event.presentation.isEnabledAndVisible = terminalIsFound(event)
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
