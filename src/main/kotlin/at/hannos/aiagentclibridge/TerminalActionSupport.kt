@@ -8,8 +8,8 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTab
 import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
+import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
 
 
@@ -22,7 +22,7 @@ object TerminalActionSupport {
             val windowTab =
                 findTerminalWidgetByTitle(project, terminalTitle) ?: return
 
-            windowTab.view.sendText(command)
+            windowTab.sendText(command)
         } catch (_: Exception) {
             notifyError(project, "Failed to send selection reference to terminal")
         }
@@ -65,9 +65,22 @@ object TerminalActionSupport {
     private fun findTerminalWidgetByTitle(
         project: Project,
         title: String,
-    ): TerminalToolWindowTab? {
+    ): AiTerminal? {
+        // Reworked Terminal
         val tabs = TerminalToolWindowTabsManager.getInstance(project).tabs
-        return tabs.find { it.view.title.buildFullTitle() == title }
+        val found = tabs.find { it.view.title.buildFullTitle() == title }
+        if (found !== null) {
+            return ReworkedAiTerminal(found)
+        }
+
+        // Classic Terminal
+        val terminalWidget =
+            TerminalToolWindowManager.getInstance(project).terminalWidgets.find { it.terminalTitle.buildFullTitle() == title }
+        if (terminalWidget !== null) {
+            return ClassicAiTerminal(terminalWidget)
+        }
+
+        return null
     }
 
     private fun hasTerminalWithTitle(project: Project, title: String): Boolean {
