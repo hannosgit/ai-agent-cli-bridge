@@ -56,9 +56,17 @@ class SendSelectionToTerminalAction : AnAction("Send Selection to Terminal") {
     }
 
     override fun update(event: AnActionEvent) {
+        val project = event.project
         val editor = event.getData(CommonDataKeys.EDITOR)
         val hasSelection = editor?.selectionModel?.hasSelection() == true
-        event.presentation.isEnabledAndVisible = event.project != null && hasSelection
+        val hasConfiguredTerminal = if (project != null) {
+            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
+            TerminalActionSupport.hasTerminalWithTitle(project, terminalTitle)
+        } else {
+            false
+        }
+
+        event.presentation.isEnabledAndVisible = project != null && hasSelection && hasConfiguredTerminal
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT

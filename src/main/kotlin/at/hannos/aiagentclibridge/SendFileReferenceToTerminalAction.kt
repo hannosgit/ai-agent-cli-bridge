@@ -45,8 +45,16 @@ class SendFileReferenceToTerminalAction : AnAction("Send File Reference to Termi
     }
 
     override fun update(event: AnActionEvent) {
+        val project = event.project
         val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        event.presentation.isEnabledAndVisible = event.project != null && virtualFile != null
+        val hasConfiguredTerminal = if (project != null) {
+            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
+            TerminalActionSupport.hasTerminalWithTitle(project, terminalTitle)
+        } else {
+            false
+        }
+
+        event.presentation.isEnabledAndVisible = project != null && virtualFile != null && hasConfiguredTerminal
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT

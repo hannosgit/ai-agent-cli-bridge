@@ -7,7 +7,9 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.ui.TerminalWidget
+import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
 
@@ -42,6 +44,21 @@ object TerminalActionSupport {
     ): TerminalWidget? {
         return terminalManager.terminalWidgets.find {
             it.terminalTitle.buildFullTitle() == title
+        }
+    }
+
+    fun hasTerminalWithTitle(project: Project, title: String): Boolean {
+        val terminalManager = TerminalToolWindowManager.getInstance(project)
+        if (findTerminalWidgetByTitle(terminalManager, title) != null) {
+            return true
+        }
+
+        val terminalWindow = ToolWindowManager.getInstance(project)
+            .getToolWindow(TerminalToolWindowFactory.TOOL_WINDOW_ID)
+            ?: return false
+
+        return terminalWindow.contentManager.contents.any {
+            it.displayName == title
         }
     }
 
