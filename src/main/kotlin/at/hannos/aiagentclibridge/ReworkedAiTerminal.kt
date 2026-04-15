@@ -8,4 +8,8 @@ class ReworkedAiTerminal(private val terminalToolWindowTab: TerminalToolWindowTa
         terminalToolWindowTab.view.sendText(text)
         return true
     }
+
+    override fun sendTextAndExecute(text: String) {
+        terminalToolWindowTab.view.createSendTextBuilder().shouldExecute().send(text)
+    }
 }

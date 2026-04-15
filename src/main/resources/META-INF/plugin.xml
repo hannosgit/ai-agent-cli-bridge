@@ -52,8 +52,8 @@
                 description="Send selected file or folder reference to AI Tool">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
-        <action id="at.hannos.aiagentclibridge.OpenConfiguredTerminalFromVcsHistoryAction"
-                class="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
+        <action id="at.hannos.aiagentclibridge.AiReviewAction"
+                class="at.hannos.aiagentclibridge.AiReviewAction"
                 text="AI Review"
                 description="Review the current changes">
             <add-to-group group-id="ChangesViewToolbar" anchor="last"/>

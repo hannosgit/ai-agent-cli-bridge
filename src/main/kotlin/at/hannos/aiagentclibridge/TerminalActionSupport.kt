@@ -36,6 +36,25 @@ object TerminalActionSupport {
         }
     }
 
+    fun sendCommandToTerminal(project: Project, command: String) {
+        try {
+            val settings = AiAgentCliBridgeSettings.getInstance().state
+            val terminalTitle = settings.terminalTitle
+            val windowTab =
+                findTerminalWidgetByTitle(project, terminalTitle)
+
+            if (windowTab == null) {
+                notifyError(project, "Failed to find configured terminal tab: $terminalTitle")
+                return
+            }
+
+            windowTab.sendTextAndExecute(command)
+        } catch (_: Exception) {
+            notifyError(project, "Failed to send selection reference to terminal")
+            return
+        }
+    }
+
     fun toProjectRelativePath(project: Project, filePath: String): String {
         val basePath = project.basePath ?: return filePath
         return try {

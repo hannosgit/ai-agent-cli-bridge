@@ -9,4 +9,8 @@ class ClassicAiTerminal(private val terminalWidget: TerminalWidget) : AiTerminal
         connector.write(text)
         return true
     }
+
+    override fun sendTextAndExecute(text: String) {
+        terminalWidget.sendCommandToExecute(text)
+    }
 }
