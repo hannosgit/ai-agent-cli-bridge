@@ -13,6 +13,7 @@ class AiAgentCliBridgeSettings : PersistentStateComponent<AiAgentCliBridgeSettin
     data class State(
         var terminalTitle: String = "AI CLI Tool",
         var launchProgramWhenNoTerminalFound: String = "claude",
+        var aiReviewCommand: String = "/review",
     )
 
     private var state = State()
