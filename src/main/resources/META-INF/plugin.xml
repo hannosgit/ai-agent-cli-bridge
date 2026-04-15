@@ -20,6 +20,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.vcs</depends>
     <depends>org.jetbrains.plugins.terminal</depends>
 
     <!-- Extensions defined by the plugin.
@@ -50,6 +51,12 @@
                 text="Send File Reference to AI Tool"
                 description="Send selected file or folder reference to AI Tool">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+        <action id="at.hannos.aiagentclibridge.OpenConfiguredTerminalFromVcsHistoryAction"
+                class="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
+                text="AI Review"
+                description="Review the current changes">
+            <add-to-group group-id="ChangesViewToolbar" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>
