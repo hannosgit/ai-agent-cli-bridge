@@ -1,8 +1,9 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.action
 
+import at.hannos.aiagentclibridge.action.TerminalActionSupport
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.ActionUpdateThread
 
 class AiReviewAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {

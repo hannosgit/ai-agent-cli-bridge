@@ -30,30 +30,30 @@
                 parentId="tools"
                 id="at.hannos.aiagentclibridge.settings"
                 displayName="AI Agent CLI Bridge"
-                instance="at.hannos.aiagentclibridge.AiAgentCliBridgeConfigurable"/>
+                instance="at.hannos.aiagentclibridge.config.AiAgentCliBridgeConfigurable"/>
     </extensions>
 
     <actions>
-        <action id="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
-                class="at.hannos.aiagentclibridge.CreateConfiguredTerminalSessionAction"
+        <action id="at.hannos.aiagentclibridge.action.CreateConfiguredTerminalSessionAction"
+                class="at.hannos.aiagentclibridge.action.CreateConfiguredTerminalSessionAction"
                 text="Open Configured AI Terminal"
                 description="Open a new terminal tab and launch configured program">
             <add-to-group group-id="MainToolbarRight" anchor="last"/>
         </action>
-        <action id="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
-                class="at.hannos.aiagentclibridge.SendSelectionToTerminalAction"
+        <action id="at.hannos.aiagentclibridge.action.SendSelectionToTerminalAction"
+                class="at.hannos.aiagentclibridge.action.SendSelectionToTerminalAction"
                 text="Send Selection to AI Tool"
                 description="Send selected editor text to AI tool">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="at.hannos.aiagentclibridge.SendFileReferenceToTerminalAction"
-                class="at.hannos.aiagentclibridge.SendFileReferenceToTerminalAction"
+        <action id="at.hannos.aiagentclibridge.action.SendFileReferenceToTerminalAction"
+                class="at.hannos.aiagentclibridge.action.SendFileReferenceToTerminalAction"
                 text="Send File Reference to AI Tool"
                 description="Send selected file or folder reference to AI Tool">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
-        <action id="at.hannos.aiagentclibridge.AiReviewAction"
-                class="at.hannos.aiagentclibridge.AiReviewAction"
+        <action id="at.hannos.aiagentclibridge.action.AiReviewAction"
+                class="at.hannos.aiagentclibridge.action.AiReviewAction"
                 text="AI Review"
                 description="Review the current changes">
             <add-to-group group-id="ChangesViewToolbar" anchor="last"/>

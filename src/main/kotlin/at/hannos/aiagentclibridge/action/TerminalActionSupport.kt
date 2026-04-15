@@ -1,5 +1,9 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.action
 
+import at.hannos.aiagentclibridge.config.AiAgentCliBridgeSettings
+import at.hannos.aiagentclibridge.terminal.AiTerminal
+import at.hannos.aiagentclibridge.terminal.ClassicAiTerminal
+import at.hannos.aiagentclibridge.terminal.ReworkedAiTerminal
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
@@ -12,12 +16,11 @@ import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
 
-
 object TerminalActionSupport {
 
     fun sendToTerminal(project: Project, command: String) {
         try {
-            val settings = AiAgentCliBridgeSettings.getInstance().state
+            val settings = AiAgentCliBridgeSettings.Companion.getInstance().state
             val terminalTitle = settings.terminalTitle
             val windowTab =
                 findTerminalWidgetByTitle(project, terminalTitle)
@@ -38,7 +41,7 @@ object TerminalActionSupport {
 
     fun sendCommandToTerminal(project: Project, command: String) {
         try {
-            val settings = AiAgentCliBridgeSettings.getInstance().state
+            val settings = AiAgentCliBridgeSettings.Companion.getInstance().state
             val terminalTitle = settings.terminalTitle
             val windowTab =
                 findTerminalWidgetByTitle(project, terminalTitle)
@@ -83,7 +86,7 @@ object TerminalActionSupport {
             return false
         }
         val hasConfiguredTerminal = run {
-            val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
+            val terminalTitle = AiAgentCliBridgeSettings.Companion.getInstance().state.terminalTitle
             hasTerminalWithTitle(project, terminalTitle)
         }
         return hasConfiguredTerminal
@@ -94,7 +97,7 @@ object TerminalActionSupport {
         title: String,
     ): AiTerminal? {
         // Reworked Terminal
-        val tabs = TerminalToolWindowTabsManager.getInstance(project).tabs
+        val tabs = TerminalToolWindowTabsManager.Companion.getInstance(project).tabs
         val found = tabs.find { it.view.title.buildFullTitle() == title }
         if (found !== null) {
             return ReworkedAiTerminal(found)

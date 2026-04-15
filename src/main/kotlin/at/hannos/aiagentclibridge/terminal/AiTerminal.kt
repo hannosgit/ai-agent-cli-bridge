@@ -1,4 +1,4 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.terminal
 
 interface AiTerminal {
 

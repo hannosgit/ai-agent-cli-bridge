@@ -1,4 +1,4 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.terminal
 
 import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTab
 

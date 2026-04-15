@@ -1,5 +1,6 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.action
 
+import at.hannos.aiagentclibridge.config.AiAgentCliBridgeSettings
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -35,7 +36,7 @@ class CreateConfiguredTerminalSessionAction : AnAction("Open Configured AI Termi
     }
 
     private fun launchAiToolInTerminal(project: Project) {
-        val settings = AiAgentCliBridgeSettings.getInstance().state
+        val settings = AiAgentCliBridgeSettings.Companion.getInstance().state
         val terminalTitle = settings.terminalTitle
         val launchProgram = settings.launchProgramWhenNoTerminalFound
 

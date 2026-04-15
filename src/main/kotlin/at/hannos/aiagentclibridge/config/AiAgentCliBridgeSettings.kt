@@ -1,4 +1,4 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.config
 
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service

@@ -1,7 +1,8 @@
-package at.hannos.aiagentclibridge
+package at.hannos.aiagentclibridge.action
 
-import at.hannos.aiagentclibridge.TerminalActionSupport.buildReference
-import at.hannos.aiagentclibridge.TerminalActionSupport.terminalIsFound
+import at.hannos.aiagentclibridge.action.TerminalActionSupport
+import at.hannos.aiagentclibridge.action.TerminalActionSupport.buildReference
+import at.hannos.aiagentclibridge.action.TerminalActionSupport.terminalIsFound
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
