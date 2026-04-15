@@ -1,6 +1,5 @@
 package at.hannos.aiagentclibridge.action
 
-import at.hannos.aiagentclibridge.action.TerminalActionSupport
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.buildReference
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.terminalIsFound
 import com.intellij.openapi.actionSystem.ActionUpdateThread
@@ -9,7 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 
 
-class SendFileReferenceToTerminalAction : AnAction("Send File Reference to AI Tool") {
+class SendFileReferenceToTerminalAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return

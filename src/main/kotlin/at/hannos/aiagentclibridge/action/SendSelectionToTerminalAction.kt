@@ -1,6 +1,5 @@
 package at.hannos.aiagentclibridge.action
 
-import at.hannos.aiagentclibridge.action.TerminalActionSupport
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.buildReference
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.terminalIsFound
 import com.intellij.openapi.actionSystem.ActionUpdateThread
@@ -12,7 +11,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 
 
-class SendSelectionToTerminalAction : AnAction("Send Selection to AI Tool") {
+class SendSelectionToTerminalAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return

@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 
 
-class CreateConfiguredTerminalSessionAction : AnAction("Open Configured AI Terminal") {
+class CreateConfiguredTerminalSessionAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
