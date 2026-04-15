@@ -37,7 +37,8 @@
         <action id="at.hannos.aiagentclibridge.action.CreateConfiguredTerminalSessionAction"
                 class="at.hannos.aiagentclibridge.action.CreateConfiguredTerminalSessionAction"
                 text="Open Configured AI Terminal"
-                description="Open a new terminal tab and launch configured program">
+                description="Open a new terminal tab and launch configured program"
+                icon="/icons/buttonIcon.svg">
             <add-to-group group-id="MainToolbarRight" anchor="last"/>
         </action>
         <action id="at.hannos.aiagentclibridge.action.SendSelectionToTerminalAction"
@@ -55,7 +56,8 @@
         <action id="at.hannos.aiagentclibridge.action.AiReviewAction"
                 class="at.hannos.aiagentclibridge.action.AiReviewAction"
                 text="AI Review"
-                description="Review the current changes">
+                description="Review the current changes"
+                icon="/icons/buttonIcon.svg">
             <add-to-group group-id="ChangesViewToolbar" anchor="last"/>
         </action>
     </actions>
