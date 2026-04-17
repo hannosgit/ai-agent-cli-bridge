@@ -20,7 +20,7 @@ object TerminalActionSupport {
 
     fun sendToTerminal(project: Project, command: String) {
         try {
-            val settings = AiAgentCliBridgeSettings.Companion.getInstance().state
+            val settings = AiAgentCliBridgeSettings.getInstance().state
             val terminalTitle = settings.terminalTitle
             val windowTab =
                 findTerminalWidgetByTitle(project, terminalTitle)
@@ -41,7 +41,7 @@ object TerminalActionSupport {
 
     fun sendCommandToTerminal(project: Project, command: String) {
         try {
-            val settings = AiAgentCliBridgeSettings.Companion.getInstance().state
+            val settings = AiAgentCliBridgeSettings.getInstance().state
             val terminalTitle = settings.terminalTitle
             val windowTab =
                 findTerminalWidgetByTitle(project, terminalTitle)
@@ -75,11 +75,12 @@ object TerminalActionSupport {
         if (project === null) {
             return false
         }
-        val hasConfiguredTerminal = run {
-            val terminalTitle = AiAgentCliBridgeSettings.Companion.getInstance().state.terminalTitle
-            hasTerminalWithTitle(project, terminalTitle)
-        }
-        return hasConfiguredTerminal
+        return terminalIsFound(project)
+    }
+
+    fun terminalIsFound(project: Project): Boolean {
+        val terminalTitle = AiAgentCliBridgeSettings.getInstance().state.terminalTitle
+        return hasTerminalWithTitle(project, terminalTitle)
     }
 
     fun buildReference(
@@ -107,12 +108,17 @@ object TerminalActionSupport {
         return "@${filePath}#L${startLine}-${endLine} "
     }
 
+    fun buildLineReference(project: Project, virtualFile: VirtualFile, line: Int): String {
+        val filePath = toProjectRelativePath(project, virtualFile.path)
+        return "@${filePath}#L${line.coerceAtLeast(1)} "
+    }
+
     private fun findTerminalWidgetByTitle(
         project: Project,
         title: String,
     ): AiTerminal? {
         // Reworked Terminal
-        val tabs = TerminalToolWindowTabsManager.Companion.getInstance(project).tabs
+        val tabs = TerminalToolWindowTabsManager.getInstance(project).tabs
         val found = tabs.find { it.view.title.buildFullTitle() == title }
         if (found !== null) {
             return ReworkedAiTerminal(found)

@@ -31,6 +31,10 @@
                 id="at.hannos.aiagentclibridge.settings"
                 displayName="AI Agent CLI Bridge"
                 instance="at.hannos.aiagentclibridge.config.AiAgentCliBridgeConfigurable"/>
+        <intentionAction>
+            <className>at.hannos.aiagentclibridge.action.SendErrorToTerminalAction</className>
+            <category>MyPlugin</category>
+        </intentionAction>
     </extensions>
 
     <actions>
