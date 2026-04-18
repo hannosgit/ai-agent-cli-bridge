@@ -11,7 +11,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 
 
-open class SendSelectionToTerminalAction : AnAction() {
+open class SendSelectionToTerminalAction(text: String? = null) : AnAction(text) {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return

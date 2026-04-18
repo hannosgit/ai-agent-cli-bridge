@@ -79,6 +79,12 @@
         >
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
+        <group id="at.hannos.aiagentclibridge.action.DynamicSelectionActionsGroup"
+               class="at.hannos.aiagentclibridge.action.DynamicSelectionActionsGroup"
+               popup="false"
+               compact="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </group>
         <action id="at.hannos.aiagentclibridge.action.SendFileReferenceToTerminalAction"
                 class="at.hannos.aiagentclibridge.action.SendFileReferenceToTerminalAction"
                 text="Send File Reference to AI Tool"
