@@ -1,17 +1,20 @@
 package at.hannos.aiagentclibridge.action
 
+import at.hannos.aiagentclibridge.MyIcons
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.buildLineReference
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.notifyError
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.sendCommandToTerminal
-import at.hannos.aiagentclibridge.action.TerminalActionSupport.sendToTerminal
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInspection.util.IntentionName
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Iconable
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
+import javax.swing.Icon
 
-class SendErrorToTerminalAction : IntentionAction {
+
+class SendErrorToTerminalAction : IntentionAction, Iconable {
 
     override fun getText(): @IntentionName String {
         return "Send error to AI Tool"
@@ -55,5 +58,9 @@ class SendErrorToTerminalAction : IntentionAction {
 
     private fun isSupportedFile(virtualFile: VirtualFile?): Boolean {
         return virtualFile != null && virtualFile.isValid && !virtualFile.isDirectory
+    }
+
+    override fun getIcon(flags: Int): Icon {
+        return MyIcons.MyIcon
     }
 }

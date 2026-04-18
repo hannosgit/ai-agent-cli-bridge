@@ -34,6 +34,7 @@
         <intentionAction>
             <className>at.hannos.aiagentclibridge.action.SendErrorToTerminalAction</className>
             <category>AI Agent CLI Bridge</category>
+            <skipBeforeAfter>true</skipBeforeAfter>
         </intentionAction>
     </extensions>
 
