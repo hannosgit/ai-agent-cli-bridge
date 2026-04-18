@@ -133,6 +133,8 @@ class AiAgentCliBridgeConfigurable : Configurable {
     private fun addDynamicActionRow(actionText: String = "", prompt: String = "") {
         val actionTextField = JBTextField(actionText)
         val promptField = JBTextField(prompt)
+        actionTextField.columns = 20
+        promptField.columns = 40
         val removeButton = JButton("Remove")
 
         val rowPanel = JPanel(GridBagLayout())
