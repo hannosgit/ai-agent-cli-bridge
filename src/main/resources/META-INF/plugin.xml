@@ -13,8 +13,17 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Enter short description for your plugin here.<br>
-        <em>most HTML tags may be used</em>
+        Seamlessly connect your IDE workflow with terminal-based AI coding tools.<br><br>
+        AI Agent CLI Bridge helps you launch a preconfigured AI terminal session and send context directly from the IDE.<br>
+        No separate subscription is required for this plugin.<br><br>
+        <b>Key features:</b>
+        <ul>
+            <li>Open a configured AI terminal from the main toolbar</li>
+            <li>Send selected editor text to your AI CLI tool</li>
+            <li>Send file and folder references from the Project view</li>
+            <li>Run AI-powered review for current VCS changes</li>
+            <li>Use intention actions for quick error-to-terminal handoff</li>
+        </ul>
     ]]></description>
 
     <!-- Product and plugin compatibility requirements.
