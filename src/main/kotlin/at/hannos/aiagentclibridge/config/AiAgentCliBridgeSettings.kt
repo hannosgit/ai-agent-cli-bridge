@@ -22,6 +22,16 @@ class AiAgentCliBridgeSettings : PersistentStateComponent<AiAgentCliBridgeSettin
         var dynamicActions: MutableList<DynamicAction> = mutableListOf(),
     )
 
+    val defaultDynamicActions: List<DynamicAction>
+        get() = listOf(
+            DynamicAction(actionText = "Generate Tests", prompt = "Generate tests"),
+            DynamicAction(actionText = "Refactor", prompt = "Refactor"),
+        )
+
+    fun getEffectiveDynamicActions(dynamicActions: List<DynamicAction>): List<DynamicAction> = dynamicActions.ifEmpty {
+        defaultDynamicActions
+    }
+
     private var state = State()
 
     override fun getState(): State = state

@@ -13,7 +13,8 @@ class DynamicSelectionActionsGroup : ActionGroup() {
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        val dynamicActions = AiAgentCliBridgeSettings.getInstance().state.dynamicActions
+        val settings = AiAgentCliBridgeSettings.getInstance()
+        val dynamicActions = settings.getEffectiveDynamicActions(settings.state.dynamicActions)
         return dynamicActions
             .asSequence()
             .map { it.actionText.trim() to it.prompt.trim() }
@@ -24,7 +25,8 @@ class DynamicSelectionActionsGroup : ActionGroup() {
     }
 
     override fun update(e: AnActionEvent) {
-        val hasDynamicActions = AiAgentCliBridgeSettings.getInstance().state.dynamicActions.any {
+        val settings = AiAgentCliBridgeSettings.getInstance()
+        val hasDynamicActions = settings.getEffectiveDynamicActions(settings.state.dynamicActions).any {
             it.actionText.isNotBlank() && it.prompt.isNotBlank()
         }
         e.presentation.isVisible = hasDynamicActions

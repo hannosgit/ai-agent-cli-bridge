@@ -63,7 +63,9 @@ class AiAgentCliBridgeConfigurable : Configurable {
     }
 
     override fun isModified(): Boolean {
-        val state = AiAgentCliBridgeSettings.getInstance().state
+        val settings = AiAgentCliBridgeSettings.getInstance()
+        val state = settings.state
+        val stateDynamicActions = settings.getEffectiveDynamicActions(state.dynamicActions)
         val currentDynamicActions = dynamicActionRows.map {
             AiAgentCliBridgeSettings.DynamicAction(
                 actionText = it.actionTextField.text,
@@ -73,7 +75,7 @@ class AiAgentCliBridgeConfigurable : Configurable {
         return terminalTitleField?.text != state.terminalTitle ||
             aiToolCommandField?.text != state.launchProgramWhenNoTerminalFound ||
             aiReviewCommandField?.text != state.aiReviewCommand ||
-            currentDynamicActions != state.dynamicActions
+            currentDynamicActions != stateDynamicActions
     }
 
     @Throws(ConfigurationException::class)
@@ -91,12 +93,13 @@ class AiAgentCliBridgeConfigurable : Configurable {
     }
 
     override fun reset() {
-        val state = AiAgentCliBridgeSettings.getInstance().state
+        val settings = AiAgentCliBridgeSettings.getInstance()
+        val state = settings.state
         terminalTitleField?.text = state.terminalTitle
         aiToolCommandField?.text = state.launchProgramWhenNoTerminalFound
         aiReviewCommandField?.text = state.aiReviewCommand
         dynamicActionRows.clear()
-        state.dynamicActions.forEach {
+        settings.getEffectiveDynamicActions(state.dynamicActions).forEach {
             addDynamicActionRow(it.actionText, it.prompt)
         }
         refreshDynamicActionsPanel()
@@ -156,4 +159,5 @@ class AiAgentCliBridgeConfigurable : Configurable {
         panel.revalidate()
         panel.repaint()
     }
+
 }

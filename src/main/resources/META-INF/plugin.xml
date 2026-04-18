@@ -63,22 +63,6 @@
         >
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="at.hannos.aiagentclibridge.action.GenerateTestsSelectionToTerminalAction"
-                class="at.hannos.aiagentclibridge.action.GenerateTestsSelectionToTerminalAction"
-                text="Generate Tests for Selection"
-                description="Send selected editor text with 'Generate tests' prompt to AI tool"
-                icon="at.hannos.aiagentclibridge.MyIcons.MyIcon"
-        >
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
-        <action id="at.hannos.aiagentclibridge.action.RefactorSelectionToTerminalAction"
-                class="at.hannos.aiagentclibridge.action.RefactorSelectionToTerminalAction"
-                text="Refactor Selection"
-                description="Send selected editor text with 'Refactor' prompt to AI tool"
-                icon="at.hannos.aiagentclibridge.MyIcons.MyIcon"
-        >
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
         <group id="at.hannos.aiagentclibridge.action.DynamicSelectionActionsGroup"
                class="at.hannos.aiagentclibridge.action.DynamicSelectionActionsGroup"
                popup="false"
