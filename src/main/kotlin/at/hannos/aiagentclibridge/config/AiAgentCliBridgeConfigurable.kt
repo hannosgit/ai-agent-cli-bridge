@@ -12,6 +12,7 @@ import java.awt.Insets
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComponent
+import javax.swing.JLabel
 import javax.swing.JPanel
 
 class AiAgentCliBridgeConfigurable : Configurable {
@@ -43,7 +44,22 @@ class AiAgentCliBridgeConfigurable : Configurable {
             refreshDynamicActionsPanel()
         }
 
+        val dynamicActionsHeader = JPanel(GridBagLayout())
+        val headerConstraints = GridBagConstraints().apply {
+            gridy = 0
+            insets = Insets(0, 0, 4, 4)
+            anchor = GridBagConstraints.WEST
+            fill = GridBagConstraints.HORIZONTAL
+        }
+        headerConstraints.gridx = 0
+        headerConstraints.weightx = 0.4
+        dynamicActionsHeader.add(JLabel("Action text"), headerConstraints)
+        headerConstraints.gridx = 1
+        headerConstraints.weightx = 0.6
+        dynamicActionsHeader.add(JLabel("Prompt"), headerConstraints)
+
         val dynamicActionsWrapper = JBPanel<JBPanel<*>>(BorderLayout())
+        dynamicActionsWrapper.add(dynamicActionsHeader, BorderLayout.NORTH)
         dynamicActionsWrapper.add(actionsContainer, BorderLayout.CENTER)
         dynamicActionsWrapper.add(addDynamicActionButton, BorderLayout.SOUTH)
 
@@ -127,6 +143,7 @@ class AiAgentCliBridgeConfigurable : Configurable {
         }
 
         constraints.gridx = 0
+        constraints.gridy = 0
         constraints.weightx = 0.4
         rowPanel.add(actionTextField, constraints)
 
@@ -135,6 +152,7 @@ class AiAgentCliBridgeConfigurable : Configurable {
         rowPanel.add(promptField, constraints)
 
         constraints.gridx = 2
+        constraints.gridy = 0
         constraints.weightx = 0.0
         constraints.fill = GridBagConstraints.NONE
         constraints.insets = Insets(0, 0, 4, 0)
