@@ -36,16 +36,13 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
     }
 
     private fun launchAiToolInTerminal(project: Project) {
-        val settings = AiAgentCliBridgeSettings.Companion.getInstance().state
+        val settings = AiAgentCliBridgeSettings.getInstance().state
         val terminalTitle = settings.terminalTitle
         val launchProgram = settings.launchProgramWhenNoTerminalFound
 
+        val map = launchProgram.split(' ').map { it.trim() }
         val terminalWidget = TerminalToolWindowManager.getInstance(project)
-            .createShellWidget(project.basePath, terminalTitle, true, true)
-
-        if (launchProgram.isNotBlank()) {
-            terminalWidget.sendCommandToExecute(launchProgram)
-        }
+            .createNewSession(project.basePath,terminalTitle,map,true,true)
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
