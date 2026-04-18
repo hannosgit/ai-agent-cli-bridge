@@ -10,10 +10,16 @@ import com.intellij.openapi.components.service
 @State(name = "AiAgentCliBridgeSettings", storages = [Storage("ai-agent-cli-bridge.xml")])
 class AiAgentCliBridgeSettings : PersistentStateComponent<AiAgentCliBridgeSettings.State> {
 
+    data class DynamicAction(
+        var actionText: String = "",
+        var prompt: String = "",
+    )
+
     data class State(
         var terminalTitle: String = "AI CLI Tool",
         var launchProgramWhenNoTerminalFound: String = "claude",
         var aiReviewCommand: String = "/review",
+        var dynamicActions: MutableList<DynamicAction> = mutableListOf(),
     )
 
     private var state = State()

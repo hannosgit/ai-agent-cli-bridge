@@ -2,8 +2,15 @@ package at.hannos.aiagentclibridge.config
 
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurationException
+import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
+import java.awt.BorderLayout
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
+import javax.swing.BoxLayout
+import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -12,6 +19,14 @@ class AiAgentCliBridgeConfigurable : Configurable {
     private var terminalTitleField: JBTextField? = null
     private var aiToolCommandField: JBTextField? = null
     private var aiReviewCommandField: JBTextField? = null
+    private var dynamicActionsPanel: JPanel? = null
+    private val dynamicActionRows = mutableListOf<DynamicActionRow>()
+
+    private data class DynamicActionRow(
+        val container: JPanel,
+        val actionTextField: JBTextField,
+        val promptField: JBTextField,
+    )
 
     override fun getDisplayName(): String = "AI Agent CLI Bridge"
 
@@ -19,13 +34,28 @@ class AiAgentCliBridgeConfigurable : Configurable {
         val terminalField = JBTextField()
         val launchProgramField = JBTextField()
         val reviewCommandField = JBTextField()
+        val actionsContainer = JPanel()
+        actionsContainer.layout = BoxLayout(actionsContainer, BoxLayout.Y_AXIS)
+
+        val addDynamicActionButton = JButton("Add dynamic action")
+        addDynamicActionButton.addActionListener {
+            addDynamicActionRow()
+            refreshDynamicActionsPanel()
+        }
+
+        val dynamicActionsWrapper = JBPanel<JBPanel<*>>(BorderLayout())
+        dynamicActionsWrapper.add(actionsContainer, BorderLayout.CENTER)
+        dynamicActionsWrapper.add(addDynamicActionButton, BorderLayout.SOUTH)
+
         terminalTitleField = terminalField
         aiToolCommandField = launchProgramField
         aiReviewCommandField = reviewCommandField
+        dynamicActionsPanel = actionsContainer
         val panel = FormBuilder.createFormBuilder()
             .addLabeledComponent("Terminal title:", terminalField)
             .addLabeledComponent("Launch AI tool command:", launchProgramField)
             .addLabeledComponent("AI review command:", reviewCommandField)
+            .addLabeledComponent("Dynamic actions:", dynamicActionsWrapper)
             .addComponentFillVertically(JPanel(), 0)
             .panel
         component = panel
@@ -34,9 +64,16 @@ class AiAgentCliBridgeConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val state = AiAgentCliBridgeSettings.getInstance().state
+        val currentDynamicActions = dynamicActionRows.map {
+            AiAgentCliBridgeSettings.DynamicAction(
+                actionText = it.actionTextField.text,
+                prompt = it.promptField.text,
+            )
+        }
         return terminalTitleField?.text != state.terminalTitle ||
             aiToolCommandField?.text != state.launchProgramWhenNoTerminalFound ||
-            aiReviewCommandField?.text != state.aiReviewCommand
+            aiReviewCommandField?.text != state.aiReviewCommand ||
+            currentDynamicActions != state.dynamicActions
     }
 
     @Throws(ConfigurationException::class)
@@ -45,6 +82,12 @@ class AiAgentCliBridgeConfigurable : Configurable {
         state.terminalTitle = terminalTitleField?.text ?: ""
         state.launchProgramWhenNoTerminalFound = aiToolCommandField?.text ?: ""
         state.aiReviewCommand = aiReviewCommandField?.text ?: ""
+        state.dynamicActions = dynamicActionRows.map {
+            AiAgentCliBridgeSettings.DynamicAction(
+                actionText = it.actionTextField.text,
+                prompt = it.promptField.text,
+            )
+        }.toMutableList()
     }
 
     override fun reset() {
@@ -52,6 +95,11 @@ class AiAgentCliBridgeConfigurable : Configurable {
         terminalTitleField?.text = state.terminalTitle
         aiToolCommandField?.text = state.launchProgramWhenNoTerminalFound
         aiReviewCommandField?.text = state.aiReviewCommand
+        dynamicActionRows.clear()
+        state.dynamicActions.forEach {
+            addDynamicActionRow(it.actionText, it.prompt)
+        }
+        refreshDynamicActionsPanel()
     }
 
     override fun disposeUIResources() {
@@ -59,5 +107,53 @@ class AiAgentCliBridgeConfigurable : Configurable {
         terminalTitleField = null
         aiToolCommandField = null
         aiReviewCommandField = null
+        dynamicActionsPanel = null
+        dynamicActionRows.clear()
+    }
+
+    private fun addDynamicActionRow(actionText: String = "", prompt: String = "") {
+        val actionTextField = JBTextField(actionText)
+        val promptField = JBTextField(prompt)
+        val removeButton = JButton("Remove")
+
+        val rowPanel = JPanel(GridBagLayout())
+        val constraints = GridBagConstraints().apply {
+            insets = Insets(0, 0, 4, 4)
+            fill = GridBagConstraints.HORIZONTAL
+            weighty = 0.0
+        }
+
+        constraints.gridx = 0
+        constraints.weightx = 0.4
+        rowPanel.add(actionTextField, constraints)
+
+        constraints.gridx = 1
+        constraints.weightx = 0.6
+        rowPanel.add(promptField, constraints)
+
+        constraints.gridx = 2
+        constraints.weightx = 0.0
+        constraints.fill = GridBagConstraints.NONE
+        constraints.insets = Insets(0, 0, 4, 0)
+        rowPanel.add(removeButton, constraints)
+
+        val row = DynamicActionRow(
+            container = rowPanel,
+            actionTextField = actionTextField,
+            promptField = promptField,
+        )
+        removeButton.addActionListener {
+            dynamicActionRows.remove(row)
+            refreshDynamicActionsPanel()
+        }
+        dynamicActionRows.add(row)
+    }
+
+    private fun refreshDynamicActionsPanel() {
+        val panel = dynamicActionsPanel ?: return
+        panel.removeAll()
+        dynamicActionRows.forEach { panel.add(it.container) }
+        panel.revalidate()
+        panel.repaint()
     }
 }
