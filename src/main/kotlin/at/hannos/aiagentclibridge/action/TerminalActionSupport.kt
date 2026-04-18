@@ -18,7 +18,7 @@ import java.nio.file.Path
 
 object TerminalActionSupport {
 
-    fun sendToTerminal(project: Project, command: String) {
+    fun sendToTerminal(project: Project, command: String, execute: Boolean) {
         try {
             val settings = AiAgentCliBridgeSettings.getInstance().state
             val terminalTitle = settings.terminalTitle
@@ -30,28 +30,13 @@ object TerminalActionSupport {
                 return
             }
 
-            if (!windowTab.sendText(command)) {
-                notifyError(project, "Failed to send selection reference to terminal")
+            if (execute) {
+                windowTab.sendTextAndExecute(command)
+            } else {
+                if (!windowTab.sendText(command)) {
+                    notifyError(project, "Failed to send selection reference to terminal")
+                }
             }
-        } catch (_: Exception) {
-            notifyError(project, "Failed to send selection reference to terminal")
-            return
-        }
-    }
-
-    fun sendCommandToTerminal(project: Project, command: String) {
-        try {
-            val settings = AiAgentCliBridgeSettings.getInstance().state
-            val terminalTitle = settings.terminalTitle
-            val windowTab =
-                findTerminalWidgetByTitle(project, terminalTitle)
-
-            if (windowTab == null) {
-                notifyError(project, "Failed to find configured terminal tab: $terminalTitle")
-                return
-            }
-
-            windowTab.sendTextAndExecute(command)
         } catch (_: Exception) {
             notifyError(project, "Failed to send selection reference to terminal")
             return

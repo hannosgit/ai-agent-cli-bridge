@@ -11,7 +11,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 
 
-class SendSelectionToTerminalAction : AnAction() {
+open class SendSelectionToTerminalAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
@@ -30,10 +30,15 @@ class SendSelectionToTerminalAction : AnAction() {
             return
         }
 
-        val command = buildReference(selectionModel, editor, project, virtualFile)
+        val reference = buildReference(selectionModel, editor, project, virtualFile)
+        val command = buildCommand(reference)
 
-        TerminalActionSupport.sendToTerminal(project, command)
+        TerminalActionSupport.sendToTerminal(project, command, executeCommand())
     }
+
+    protected open fun getPromptText(): String? = null
+
+    protected open fun executeCommand(): Boolean = false
 
     override fun update(event: AnActionEvent) {
         val editor = event.getData(CommonDataKeys.EDITOR)
@@ -46,4 +51,13 @@ class SendSelectionToTerminalAction : AnAction() {
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
+
+    private fun buildCommand(reference: String): String {
+        val promptText = getPromptText()?.trim().orEmpty()
+        if (promptText.isEmpty()) {
+            return reference
+        }
+
+        return "$promptText $reference"
+    }
 }

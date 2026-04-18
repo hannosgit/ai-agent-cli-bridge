@@ -31,7 +31,7 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
 
         if (virtualFile != null) {
             val command = TerminalActionSupport.buildReference(null, null, project, virtualFile)
-            TerminalActionSupport.sendToTerminal(project, command)
+            TerminalActionSupport.sendToTerminal(project, command, false)
         }
     }
 
@@ -41,8 +41,8 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
         val launchProgram = settings.launchProgramWhenNoTerminalFound
 
         val map = launchProgram.split(' ').map { it.trim() }
-        val terminalWidget = TerminalToolWindowManager.getInstance(project)
-            .createNewSession(project.basePath,terminalTitle,map,true,true)
+        TerminalToolWindowManager.getInstance(project)
+            .createNewSession(project.basePath, terminalTitle, map, true, true)
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT

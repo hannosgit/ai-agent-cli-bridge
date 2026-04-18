@@ -20,7 +20,7 @@ class SendFileReferenceToTerminalAction : AnAction() {
         }
 
         val command = buildReference(null, null, project, virtualFile)
-        TerminalActionSupport.sendToTerminal(project, command)
+        TerminalActionSupport.sendToTerminal(project, command, false)
     }
 
     override fun update(event: AnActionEvent) {

@@ -3,7 +3,6 @@ package at.hannos.aiagentclibridge.action
 import at.hannos.aiagentclibridge.MyIcons
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.buildLineReference
 import at.hannos.aiagentclibridge.action.TerminalActionSupport.notifyError
-import at.hannos.aiagentclibridge.action.TerminalActionSupport.sendCommandToTerminal
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInspection.util.IntentionName
 import com.intellij.openapi.editor.Editor
@@ -49,7 +48,7 @@ class SendErrorToTerminalAction : IntentionAction, Iconable {
 
         val lineReference = buildLineReference(project, virtualFile ?: return, line)
         val command = "$lineReference fix this error"
-        sendCommandToTerminal(project, command)
+        TerminalActionSupport.sendToTerminal(project, command, true)
     }
 
     override fun startInWriteAction(): Boolean {

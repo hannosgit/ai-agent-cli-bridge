@@ -10,7 +10,7 @@ class AiReviewAction : AnAction() {
         val project = e.project ?: return
         val reviewCommand = AiAgentCliBridgeSettings.getInstance().state.aiReviewCommand
 
-        TerminalActionSupport.sendCommandToTerminal(project, reviewCommand)
+        TerminalActionSupport.sendToTerminal(project, reviewCommand, true)
     }
 
     override fun update(e: AnActionEvent) {
