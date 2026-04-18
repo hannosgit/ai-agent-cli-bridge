@@ -5,7 +5,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>Ai Agent Cli Bridge</name>
+    <name>AI Agent Cli Bridge</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor>hannos</vendor>
@@ -49,20 +49,24 @@
         <action id="at.hannos.aiagentclibridge.action.SendSelectionToTerminalAction"
                 class="at.hannos.aiagentclibridge.action.SendSelectionToTerminalAction"
                 text="Send Selection to AI Tool"
-                description="Send selected editor text to AI tool">
+                description="Send selected editor text to AI tool"
+                icon="at.hannos.aiagentclibridge.MyIcons.MyIcon"
+        >
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="at.hannos.aiagentclibridge.action.SendFileReferenceToTerminalAction"
                 class="at.hannos.aiagentclibridge.action.SendFileReferenceToTerminalAction"
                 text="Send File Reference to AI Tool"
-                description="Send selected file or folder reference to AI Tool">
+                description="Send selected file or folder reference to AI Tool"
+                icon="at.hannos.aiagentclibridge.MyIcons.MyIcon"
+        >
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
         <action id="at.hannos.aiagentclibridge.action.AiReviewAction"
                 class="at.hannos.aiagentclibridge.action.AiReviewAction"
                 text="AI Review"
                 description="Review the current changes"
-                icon="/icons/buttonIcon.svg">
+                icon="at.hannos.aiagentclibridge.MyIcons.MyIcon">
             <add-to-group group-id="ChangesViewToolbar" anchor="last"/>
         </action>
     </actions>
