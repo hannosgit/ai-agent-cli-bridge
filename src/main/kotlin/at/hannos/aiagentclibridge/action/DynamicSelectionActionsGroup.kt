@@ -3,6 +3,7 @@ package at.hannos.aiagentclibridge.action
 import at.hannos.aiagentclibridge.MyIcons
 import at.hannos.aiagentclibridge.config.AiAgentCliBridgeSettings
 import com.intellij.openapi.actionSystem.ActionGroup
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 
@@ -31,5 +32,9 @@ class DynamicSelectionActionsGroup : ActionGroup() {
         }
         e.presentation.isVisible = hasDynamicActions
         e.presentation.isEnabled = hasDynamicActions
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
     }
 }
