@@ -1,117 +1,105 @@
-# IntelliJ Platform Plugin Template
+# AI Agent CLI Bridge
 
-[![Twitter Follow](https://img.shields.io/badge/follow-%40JBPlatform-1DA1F2?logo=twitter)](https://twitter.com/JBPlatform)
-[![Developers Forum](https://img.shields.io/badge/JetBrains%20Platform-Join-blue)][jb:forum]
+An IntelliJ Platform plugin that seamlessly connects your IDE workflow with terminal-based AI coding tools
+(such as [Claude Code](https://www.anthropic.com/claude-code), [OpenAI Codex CLI](https://github.com/openai/codex),
+[Pi](https://pi.dev/), [Junie CLI](https://www.jetbrains.com/junie/), and similar agents).
 
-## Plugin template structure
+It launches a preconfigured AI terminal session inside the IDE and lets you send rich context
+(selections, file/folder references, errors, VCS changes) straight into your AI CLI tool — using
+each tool's native reference syntax.
 
-A generated project contains the following content structure:
+> No separate subscription is required for this plugin. You only need an AI CLI tool installed
+> and authenticated on your machine.
+
+---
+
+## Features
+
+- **Open a Configured AI Terminal** from the main IDE toolbar — starts a new terminal tab and
+  automatically launches the configured AI CLI command.
+- **Send Selection to AI Tool** — send the currently selected editor text to the running AI
+  terminal from the editor context menu.
+- **Send File Reference to AI Tool** — right‑click a file or folder in the Project view to send
+  its path to the AI tool using the tool's reference format.
+- **Dynamic Selection Actions** — context‑aware actions that adapt to the current editor selection.
+- **Send Error to Terminal (Intention Action)** — quick `Alt+Enter` handoff of an error/warning at
+  the caret to your AI terminal.
+- **AI Review** — run an AI‑powered review of the current VCS changes from the Changes view toolbar.
+- **Clickable File Paths in Console** — file paths printed by AI CLI tools in the terminal/console
+  become clickable links that open the file in the editor. Supports relative and absolute paths,
+  plus optional `:line` and `:line:column` suffixes.
+
+## Supported AI CLI Tools
+
+Each tool uses its own reference syntax when sending file/selection context. See [`tools.md`](./tools.md)
+for the exact formats:
+
+| Tool        | File reference example                                      |
+|-------------|-------------------------------------------------------------|
+| Claude Code | `@src/main/File.kt`, `@src/main/File.kt#L22-24`             |
+| Codex       | `src/main/kotlin/.../AiTerminal.kt:21-23`                   |
+| Pi          | `src/main/kotlin/.../AiTerminal.kt` / `...:21-23`           |
+| Junie       | (see `tools.md`)                                            |
+
+## Requirements
+
+- IntelliJ‑based IDE `2025.3.4` or newer (`sinceBuild = 252.25557`)
+- JDK 21
+- The bundled **Terminal** plugin enabled
+- An installed AI CLI tool of your choice, available on `PATH`
+
+## Installation
+
+### From source
+
+```bash
+./gradlew buildPlugin
+```
+
+The resulting plugin ZIP will be located at `build/distributions/`.
+Install it in your IDE via *Settings → Plugins → ⚙ → Install Plugin from Disk…*.
+
+### Run a sandbox IDE for development
+
+```bash
+./gradlew runIde
+```
+
+## Configuration
+
+Open *Settings → Tools → AI Agent CLI Bridge* to configure:
+
+- The AI CLI command to launch in the terminal
+- Tool‑specific reference formatting
+- Other behavior of the plugin actions
+
+## Usage
+
+1. Configure your AI CLI tool under *Settings → Tools → AI Agent CLI Bridge*.
+2. Click **Open Configured AI Terminal** in the main toolbar to start an AI session.
+3. From the editor, Project view, Problems view, or Changes view, use the corresponding
+   *Send to AI Tool* / *AI Review* actions to pipe context into the running session.
+4. Click on any file path printed by the AI tool in the terminal to jump to that location in the editor.
+
+## Project Structure
 
 ```
-.
-├── .run/                   Predefined Run/Debug Configurations
-├── build/                  Output build directory
-├── gradle
-│   ├── wrapper/            Gradle Wrapper
-├── src                     Plugin sources
-│   ├── main
-│   │   ├── kotlin/         Kotlin production sources
-│   │   └── resources/      Resources - plugin.xml, icons, messages
-├── .gitignore              Git ignoring rules
-├── build.gradle.kts        Gradle build configuration
-├── gradle.properties       Gradle configuration properties
-├── gradlew                 *nix Gradle Wrapper script
-├── gradlew.bat             Windows Gradle Wrapper script
-├── README.md               README
-└── settings.gradle.kts     Gradle project settings
+src/main/kotlin/at/hannos/aiagentclibridge/
+├── action/          IDE actions (send selection/file/error, AI review, terminal launcher)
+├── config/          Settings UI and persistent state
+├── console/         Console filter making file paths clickable
+└── terminal/        AI terminal integration (classic & reworked variants)
+src/main/resources/META-INF/plugin.xml   Plugin descriptor
 ```
 
-In addition to the configuration files, the most crucial part is the `src` directory, which contains our implementation
-and the manifest for our plugin – [plugin.xml][file:plugin.xml].
+## Development
 
-> [!NOTE]
-> To use Java in your plugin, create the `/src/main/java` directory.
+See [`DEVELOPMENT.md`](./DEVELOPMENT.md) for details on the IntelliJ Platform plugin template,
+run configurations, and publishing.
 
-## Plugin configuration file
+Testing notes live in [`TESTING.md`](./TESTING.md).
+Open ideas and planned improvements are tracked in [`IDEAS.md`](./IDEAS.md) and [`TODO.md`](./TODO.md).
 
-The plugin configuration file is a [plugin.xml][file:plugin.xml] file located in the `src/main/resources/META-INF`
-directory.
-It provides general information about the plugin, its dependencies, extensions, and listeners.
+## License
 
-You can read more about this file in the [Plugin Configuration File][docs:plugin.xml] section of our documentation.
-
-If you're still not quite sure what this is all about, read our
-introduction: [What is the IntelliJ Platform?][docs:intro]
-
-$H$H Predefined Run/Debug configurations
-
-Within the default project structure, there is a `.run` directory provided containing predefined *Run/Debug
-configurations* that expose corresponding Gradle tasks:
-
-| Configuration name | Description                                                                                                                                                                         |
-|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Run Plugin         | Runs [`:runIde`][gh:intellij-platform-gradle-plugin-runIde] IntelliJ Platform Gradle Plugin task. Use the *Debug* icon for plugin debugging.                                        |
-| Run Tests          | Runs [`:test`][gradle:lifecycle-tasks] Gradle task.                                                                                                                                 |
-| Run Verifications  | Runs [`:verifyPlugin`][gh:intellij-platform-gradle-plugin-verifyPlugin] IntelliJ Platform Gradle Plugin task to check the plugin compatibility against the specified IntelliJ IDEs. |
-
-> [!NOTE]
-> You can find the logs from the running task in the `idea.log` tab.
-
-## Publishing the plugin
-
-> [!TIP]
-> Make sure to follow all guidelines listed in [Publishing a Plugin][docs:publishing] to follow all recommended and
-> required steps.
-
-Releasing a plugin to [JetBrains Marketplace](https://plugins.jetbrains.com) is a straightforward operation that uses
-the `publishPlugin` Gradle task provided by
-the [intellij-platform-gradle-plugin][gh:intellij-platform-gradle-plugin-docs].
-
-You can also upload the plugin to the [JetBrains Plugin Repository](https://plugins.jetbrains.com/plugin/upload)
-manually via UI.
-
-## Useful links
-
-- [IntelliJ Platform SDK Plugin SDK][docs]
-- [IntelliJ Platform Gradle Plugin Documentation][gh:intellij-platform-gradle-plugin-docs]
-- [IntelliJ Platform Explorer][jb:ipe]
-- [JetBrains Marketplace Quality Guidelines][jb:quality-guidelines]
-- [IntelliJ Platform UI Guidelines][jb:ui-guidelines]
-- [JetBrains Marketplace Paid Plugins][jb:paid-plugins]
-- [IntelliJ SDK Code Samples][gh:code-samples]
-
-[docs]: https://plugins.jetbrains.com/docs/intellij
-
-[docs:intro]: https://plugins.jetbrains.com/docs/intellij/intellij-platform.html?from=IJPluginTemplate
-
-[docs:plugin.xml]: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html?from=IJPluginTemplate
-
-[docs:publishing]: https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate
-
-[file:plugin.xml]: ./src/main/resources/META-INF/plugin.xml
-
-[gh:code-samples]: https://github.com/JetBrains/intellij-sdk-code-samples
-
-[gh:intellij-platform-gradle-plugin]: https://github.com/JetBrains/intellij-platform-gradle-plugin
-
-[gh:intellij-platform-gradle-plugin-docs]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
-
-[gh:intellij-platform-gradle-plugin-runIde]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#runIde
-
-[gh:intellij-platform-gradle-plugin-verifyPlugin]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#verifyPlugin
-
-[gradle:lifecycle-tasks]: https://docs.gradle.org/current/userguide/java_plugin.html#lifecycle_tasks
-
-[jb:github]: https://github.com/JetBrains/.github/blob/main/profile/README.md
-
-[jb:forum]: https://platform.jetbrains.com/
-
-[jb:quality-guidelines]: https://plugins.jetbrains.com/docs/marketplace/quality-guidelines.html
-
-[jb:paid-plugins]: https://plugins.jetbrains.com/docs/marketplace/paid-plugins-marketplace.html
-
-[jb:quality-guidelines]: https://plugins.jetbrains.com/docs/marketplace/quality-guidelines.html
-
-[jb:ipe]: https://jb.gg/ipe
-
-[jb:ui-guidelines]: https://jetbrains.github.io/ui
+This project is licensed under the MIT License — see the [`LICENSE`](./LICENSE) file for details.
