@@ -31,6 +31,27 @@
         </ul>
     ]]></description>
 
+    <change-notes>
+        <![CDATA[
+        <h1>0.2</h1>
+        <h2>New Features</h2>
+        <ul>
+          <li>Sending multiple selected file/folder references to the terminal</li>
+        </ul>
+        <h1>0.1</h1>
+        <h2>New Features</h2>
+        <ul>
+          <li>Feature 1</li>
+          <li>Feature 2</li>
+        </ul>
+        <h2>Bug Fixes</h2>
+        <ul>
+          <li>Fixed issue 1</li>
+          <li>Fixed issue 2</li>
+        </ul>
+        ]]>
+    </change-notes>
+
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>

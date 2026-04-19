@@ -12,20 +12,26 @@ class SendFileReferenceToTerminalAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
-        val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
+        val virtualFiles = event.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+            ?.takeIf { it.isNotEmpty() }
+            ?: event.getData(CommonDataKeys.VIRTUAL_FILE)?.let { arrayOf(it) }
 
-        if (virtualFile == null) {
+        if (virtualFiles.isNullOrEmpty()) {
             TerminalActionSupport.notifyError(project, "Failed to resolve selected file or folder")
             return
         }
 
-        val command = buildReference(null, null, project, virtualFile)
+        val command = virtualFiles
+            .distinctBy { it.path }
+            .joinToString(separator = "") { buildReference(null, null, project, it) }
+
         TerminalActionSupport.sendToTerminal(project, command, false)
     }
 
     override fun update(event: AnActionEvent) {
-        val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        if (virtualFile === null) {
+        val files = event.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+        val singleFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
+        if (files.isNullOrEmpty() && singleFile === null) {
             return
         }
 
