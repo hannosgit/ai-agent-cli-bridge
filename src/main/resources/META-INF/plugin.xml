@@ -21,6 +21,11 @@
             <li>Open a configured AI terminal from the main toolbar</li>
             <li>Send selected editor text to your AI CLI tool</li>
             <li>Send file and folder references from the Project view</li>
+            <li>
+               Turns file paths printed by AI CLI tools in the console into clickable
+               links that open the file in the editor (supports relative and absolute
+               paths, plus optional <code>:line</code> and <code>:line:column</code> suffixes)
+           </li>
             <li>Run AI-powered review for current VCS changes</li>
             <li>Use intention actions for quick error-to-terminal handoff</li>
         </ul>
