@@ -10,17 +10,26 @@ import com.intellij.openapi.vfs.LocalFileSystem
 
 class FilePathFilter(private val project: Project) : Filter {
 
-    // Matches: src/main/Foo.java  or  src/main/Foo.java:42  or  src/main/Foo.java:42:10
-    private val pattern = Regex("""([\w./\-]+\.\w+)(?::(\d+))?(?::(\d+))?""")
+    // Matches Unix-style relative paths:    src/main/Foo.java[:42[:10]]
+    // Matches Windows-style relative paths: src\main\Foo.java[:42[:10]]
+    // Matches absolute Unix paths:          /home/user/Foo.java[:42[:10]]
+    // Matches absolute Windows paths:       C:\Users\user\Foo.java[:42[:10]] or C:/Users/user/Foo.java[:42[:10]]
+    private val pattern = Regex("""((?:[A-Za-z]:[\\/])?[\w.\-\\/]+\.\w+)(?::(\d+))?(?::(\d+))?""")
 
     override fun applyFilter(line: String, entireLength: Int): Result? {
         val match = pattern.find(line) ?: return null
 
-        val relativePath = match.groupValues[1]
+        val rawPath = match.groupValues[1]
         val lineNumber = match.groupValues[2].toIntOrNull()?.minus(1) ?: 0
         val column = match.groupValues[3].toIntOrNull()?.minus(1) ?: 0
 
-        val absolutePath = "${project.basePath}/$relativePath"
+        // Normalize backslashes to forward slashes for VFS lookup
+        val relativePath = rawPath.replace('\\', '/')
+
+        val isAbsolute = relativePath.startsWith("/") ||
+                relativePath.length >= 2 && relativePath[1] == ':'
+
+        val absolutePath = if (isAbsolute) relativePath else "${project.basePath}/$relativePath"
         val virtualFile = LocalFileSystem.getInstance()
             .findFileByPath(absolutePath) ?: return null
 

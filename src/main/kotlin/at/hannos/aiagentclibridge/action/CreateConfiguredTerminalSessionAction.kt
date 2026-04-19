@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.terminal.TerminalToolWindowManager
+import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
 
 
 class CreateConfiguredTerminalSessionAction : AnAction() {
@@ -40,9 +40,14 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
         val terminalTitle = settings.terminalTitle
         val launchProgram = settings.launchProgramWhenNoTerminalFound
 
-        val shellCommand = launchProgram.split(' ').map { it.trim() }
-        TerminalToolWindowManager.getInstance(project)
-            .createNewSession(project.basePath, terminalTitle, shellCommand, true, true)
+        val toolWindowTab = TerminalToolWindowTabsManager.getInstance(project).createTabBuilder()
+            .workingDirectory(project.basePath)
+            .tabName(terminalTitle)
+            .requestFocus(true)
+            .deferSessionStartUntilUiShown(true)
+            .createTab()
+        toolWindowTab.view.createSendTextBuilder().shouldExecute().send(launchProgram)
+
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
