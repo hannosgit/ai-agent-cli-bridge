@@ -45,6 +45,10 @@
             <category>AI Agent CLI Bridge</category>
             <skipBeforeAfter>true</skipBeforeAfter>
         </intentionAction>
+
+        <consoleFilterProvider
+                implementation="at.hannos.aiagentclibridge.console.FilePathFilterProvider"
+                order="first"/>
     </extensions>
 
     <actions>
