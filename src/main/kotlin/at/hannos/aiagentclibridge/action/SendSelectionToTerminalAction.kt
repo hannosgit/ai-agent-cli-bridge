@@ -24,14 +24,15 @@ open class SendSelectionToTerminalAction(text: String? = null) : AnAction(text) 
         val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
         val selectionModel = editor.selectionModel
 
-        if (!selectionModel.hasSelection()) {
-            ToolWindowManager.getInstance(project)
-                .notifyByBalloon(TerminalToolWindowFactory.TOOL_WINDOW_ID, MessageType.WARNING, "No text selected")
+        if (virtualFile == null) {
+            TerminalActionSupport.notifyError(project, "Failed to resolve selected file")
             return
         }
 
-        if (virtualFile == null) {
-            TerminalActionSupport.notifyError(project, "Failed to resolve selected file")
+        if (!selectionModel.hasSelection()) {
+            val reference = buildReference(null, null, project, virtualFile)
+            val command = buildCommand(reference)
+            TerminalActionSupport.sendToTerminal(project, command, executeCommand())
             return
         }
 
