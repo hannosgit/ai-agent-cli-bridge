@@ -40,9 +40,9 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
         val terminalTitle = settings.terminalTitle
         val launchProgram = settings.launchProgramWhenNoTerminalFound
 
-        val map = launchProgram.split(' ').map { it.trim() }
+        val shellCommand = launchProgram.split(' ').map { it.trim() }
         TerminalToolWindowManager.getInstance(project)
-            .createNewSession(project.basePath, terminalTitle, map, true, true)
+            .createNewSession(project.basePath, terminalTitle, shellCommand, true, true)
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
