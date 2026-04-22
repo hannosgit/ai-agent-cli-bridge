@@ -4,10 +4,10 @@ import at.hannos.aiagentclibridge.config.AiAgentCliBridgeSettings
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
+import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 
 
 class CreateConfiguredTerminalSessionAction : AnAction() {
@@ -16,22 +16,25 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
         val project = event.project ?: return
 
         if (TerminalActionSupport.terminalIsFound(event)) {
-            sendToTerminal(event, project)
+            showTerminal(project)
         } else {
             launchAiToolInTerminal(project)
         }
     }
 
-    private fun sendToTerminal(
-        event: AnActionEvent,
-        project: Project
-    ) {
-        val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
-            ?: FileEditorManager.getInstance(project).selectedFiles.firstOrNull()
+    private fun showTerminal(project: Project) {
+        val toolWindow = ToolWindowManager.getInstance(project)
+            .getToolWindow(TerminalToolWindowFactory.TOOL_WINDOW_ID) ?: return
+        val settings = AiAgentCliBridgeSettings.getInstance().state
+        val contentManager = toolWindow.contentManager
+        val terminalTitle = settings.terminalTitle
+        val existing = contentManager.findContent(terminalTitle)
 
-        if (virtualFile != null) {
-            val command = TerminalActionSupport.buildReference(null, null, project, virtualFile)
-            TerminalActionSupport.sendToTerminal(project, command, false)
+        if (existing != null) {
+            // Tab exists — just focus it
+            toolWindow.activate {
+                contentManager.setSelectedContent(existing, true)
+            }
         }
     }
 
