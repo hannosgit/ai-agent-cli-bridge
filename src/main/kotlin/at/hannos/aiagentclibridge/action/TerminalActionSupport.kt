@@ -12,6 +12,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import java.nio.file.Path
@@ -29,6 +30,8 @@ object TerminalActionSupport {
                 notifyError(project, "Failed to find configured terminal tab: $terminalTitle")
                 return
             }
+
+            showTerminalToolWindow(project)
 
             if (execute) {
                 windowTab.sendTextAndExecute(command)
@@ -96,6 +99,11 @@ object TerminalActionSupport {
     fun buildLineReference(project: Project, virtualFile: VirtualFile, line: Int): String {
         val filePath = toProjectRelativePath(project, virtualFile.path)
         return "@${filePath}#L${line.coerceAtLeast(1)} "
+    }
+
+    private fun showTerminalToolWindow(project: Project) {
+        val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Terminal") ?: return
+        toolWindow.show(null)
     }
 
     private fun findTerminalWidgetByTitle(
