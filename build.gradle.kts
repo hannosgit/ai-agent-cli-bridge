@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.intellij.platform") version "2.10.2"
+    id("org.jetbrains.changelog") version "2.2.1"
 }
 
 group = "at.hannos"
@@ -35,12 +36,29 @@ intellijPlatform {
         ideaVersion {
             sinceBuild = "253"
         }
+        changeNotes = provider {
+            with(changelog) {
+                renderItem(
+                    (getOrNull(project.version.toString()) ?: getUnreleased())
+                        .withHeader(false)
+                        .withEmptySections(false),
+                    org.jetbrains.changelog.Changelog.OutputType.HTML,
+                )
+            }
+        }
     }
     pluginVerification {
         ides {
             recommended()
         }
     }
+}
+
+changelog {
+    version.set(project.version.toString())
+    path.set(file("CHANGELOG.md").canonicalPath)
+    headerParserRegex.set("""(\d+\.\d+(\.\d+)?)""".toRegex())
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }
 
 tasks {
