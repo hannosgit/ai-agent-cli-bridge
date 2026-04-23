@@ -19,6 +19,7 @@
         <b>Key features:</b>
         <ul>
             <li>Open a configured AI terminal from the main toolbar</li>
+            <li>(The configured AI terminal has to be open for the features below)</li>
             <li>Send selected editor text to your AI CLI tool</li>
             <li>Send file and folder references from the Project view</li>
             <li>
