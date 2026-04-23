@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "at.hannos"
-version = "0.3"
+version = "0.4"
 
 repositories {
     mavenCentral()
