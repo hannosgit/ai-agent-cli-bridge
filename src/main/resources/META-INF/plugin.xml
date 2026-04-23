@@ -33,13 +33,18 @@
 
     <change-notes>
         <![CDATA[
+        <h1>0.4</h1>
+        <h2>Changes</h2>
+        <ul>
+          <li>Add support for path segments in parentheses (e.g. Next.js dynamic routes)</li>
+        </ul>
         <h1>0.3</h1>
+        <h2>Changes</h2>
         <ul>
           <li>Show configured terminal when pressing button if terminal already exists</li>
           <li>Always show terminal when sending text to it</li>
           <li>Add support for path segments in square brackets (e.g. Next.js dynamic routes)</li>
         </ul>
-        <h2>Changes</h2>
         <h1>0.2</h1>
         <h2>New Features</h2>
         <ul>

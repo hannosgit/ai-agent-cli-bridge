@@ -15,7 +15,8 @@ class FilePathFilter(private val project: Project) : Filter {
     // Matches absolute Unix paths:          /home/user/Foo.java[:42[:10]]
     // Matches absolute Windows paths:       C:\Users\user\Foo.java[:42[:10]] or C:/Users/user/Foo.java[:42[:10]]
     // Also supports path segments in square brackets (e.g. Next.js dynamic routes): src/main/[id]/Foo.java
-    private val pattern = Regex("""((?:[A-Za-z]:[\\/])?[\w.\-\\/\[\]]+\.\w+)(?::(\d+))?(?::(\d+))?""")
+    // Also supports path segments in parentheses (e.g. Next.js route groups): src/app/(loggedin)/page.tsx
+    private val pattern = Regex("""((?:[A-Za-z]:[\\/])?[\w.\-\\/\[\]()]+\.\w+)(?::(\d+))?(?::(\d+))?""")
 
     override fun applyFilter(line: String, entireLength: Int): Result? {
         val match = pattern.find(line) ?: return null

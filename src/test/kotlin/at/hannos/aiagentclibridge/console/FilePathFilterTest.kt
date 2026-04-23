@@ -123,4 +123,15 @@ class FilePathFilterTest : BasePlatformTestCase() {
         val result = filter.applyFilter(line, line.length)
         assertNotNull(result)
     }
+
+    fun testMatchesNextJsRouteGroupParentheses() {
+        val rel = "src/app/(loggedin)/page.tsx"
+        createProjectFile(rel)
+        val line = "see $rel here"
+        val result = filter.applyFilter(line, line.length)
+        assertNotNull(result)
+        val item = result!!.resultItems.single()
+        assertEquals(line.indexOf(rel), item.highlightStartOffset)
+        assertEquals(line.indexOf(rel) + rel.length, item.highlightEndOffset)
+    }
 }
