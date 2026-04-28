@@ -1,6 +1,10 @@
 # AI Agent CLI Bridge Changelog
 
-## [Unreleased]
+## [0.5]
+
+### Changed
+
+- Fix terminal title getting overwritten by CLI in 2026.1.1 versions
 
 ## [0.4]
 

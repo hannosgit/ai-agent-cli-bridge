@@ -50,7 +50,9 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
             .deferSessionStartUntilUiShown(true)
             .createTab()
         toolWindowTab.view.createSendTextBuilder().shouldExecute().send(launchProgram)
-
+        toolWindowTab.view.title.change {
+            userDefinedTitle = terminalTitle
+        }
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
