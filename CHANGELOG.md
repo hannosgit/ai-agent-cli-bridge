@@ -1,5 +1,11 @@
 # AI Agent CLI Bridge Changelog
 
+## [0.6]
+
+### Added
+
+- Show references to files in Markdown (`.md`) files as links
+
 ## [0.5]
 
 ### Changed

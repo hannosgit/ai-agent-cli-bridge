@@ -37,6 +37,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.vcs</depends>
+    <depends>org.intellij.plugins.markdown</depends>
     <depends>org.jetbrains.plugins.terminal</depends>
 
     <!-- Extensions defined by the plugin.
@@ -56,6 +57,14 @@
         <consoleFilterProvider
                 implementation="at.hannos.aiagentclibridge.console.FilePathFilterProvider"
                 order="first"/>
+        <psi.referenceContributor
+                language="Markdown"
+                implementation="at.hannos.aiagentclibridge.markdown.MarkdownFilePathReferenceContributor"/>
+        <annotator
+                language="Markdown"
+                implementationClass="at.hannos.aiagentclibridge.markdown.MarkdownFilePathAnnotator"/>
+        <gotoDeclarationHandler
+                implementation="at.hannos.aiagentclibridge.markdown.MarkdownFilePathGotoDeclarationHandler"/>
     </extensions>
 
     <actions>

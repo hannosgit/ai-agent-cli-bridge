@@ -19,6 +19,7 @@ repositories {
 dependencies {
     intellijPlatform {
         intellijIdea("2025.3.4")
+        bundledPlugin("org.intellij.plugins.markdown")
         bundledPlugin("org.jetbrains.plugins.terminal")
         bundledModule("intellij.platform.vcs.impl")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
