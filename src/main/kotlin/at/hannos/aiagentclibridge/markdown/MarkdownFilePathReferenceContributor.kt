@@ -14,12 +14,14 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.pom.Navigatable
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.PsiReferenceRegistrar
+import com.intellij.psi.impl.FakePsiElement
 import com.intellij.util.ProcessingContext
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 
@@ -93,8 +95,31 @@ class MarkdownFilePathGotoDeclarationHandler : GotoDeclarationHandler {
         val match = MarkdownFilePathReferenceProvider.findMatchAtOffset(element, offset) ?: return null
         val target = PsiManager.getInstance(element.project).findFile(match.virtualFile) ?: return null
 
-        return arrayOf(target)
+        return arrayOf(MarkdownFilePathNavigationTarget(target, match))
     }
+}
+
+private class MarkdownFilePathNavigationTarget(
+    private val target: PsiElement,
+    private val match: FilePathLinkSupport.Match,
+) : FakePsiElement(), Navigatable {
+
+    override fun getParent(): PsiElement = target
+
+    override fun getContainingFile(): PsiFile? = target.containingFile
+
+    override fun getProject() = target.project
+
+    override fun getName(): String = match.text
+
+    override fun navigate(requestFocus: Boolean) {
+        val descriptor = OpenFileDescriptor(project, match.virtualFile, match.lineNumber, match.column)
+        FileEditorManager.getInstance(project).openTextEditor(descriptor, requestFocus)
+    }
+
+    override fun canNavigate(): Boolean = true
+
+    override fun canNavigateToSource(): Boolean = true
 }
 
 class MarkdownFilePathAnnotator : Annotator {

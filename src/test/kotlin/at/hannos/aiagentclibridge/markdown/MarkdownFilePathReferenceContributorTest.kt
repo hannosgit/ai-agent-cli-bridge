@@ -3,8 +3,10 @@ package at.hannos.aiagentclibridge.markdown
 import com.intellij.codeInsight.highlighting.HighlightedReference
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.colors.CodeInsightColors
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.pom.Navigatable
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ProcessingContext
 import java.io.File
@@ -19,10 +21,10 @@ class MarkdownFilePathReferenceContributorTest : BasePlatformTestCase() {
         baseDir.mkdirs()
     }
 
-    private fun createProjectFile(relativePath: String): File {
+    private fun createProjectFile(relativePath: String, content: String = "// test file\n"): File {
         val file = File(baseDir, relativePath)
         file.parentFile.mkdirs()
-        file.writeText("// test file\n")
+        file.writeText(content)
         runWriteAction {
             VfsUtil.markDirtyAndRefresh(
                 false,
@@ -92,6 +94,38 @@ class MarkdownFilePathReferenceContributorTest : BasePlatformTestCase() {
             LocalFileSystem.getInstance().findFileByIoFile(targetFile),
             targets!!.single().containingFile.virtualFile,
         )
+    }
+
+    fun testMarkdownReadmeJavaPathReferenceWithLineNavigatesToReferencedLine() {
+        val rel = "src/main/java/org/example/Target.java"
+        val targetFile = createProjectFile(
+            rel,
+            """
+                package org.example;
+
+                public class Target {
+                }
+            """.trimIndent(),
+        )
+        val text = "See ${rel.take(5)}<caret>${rel.drop(5)}:3 for details."
+
+        myFixture.configureByText("README.md", text)
+
+        val sourceElement = myFixture.file.findElementAt(myFixture.caretOffset)
+        val target = MarkdownFilePathGotoDeclarationHandler()
+            .getGotoDeclarationTargets(sourceElement, myFixture.caretOffset, myFixture.editor)!!
+            .single()
+
+        assertEquals(
+            LocalFileSystem.getInstance().findFileByIoFile(targetFile),
+            target.containingFile.virtualFile,
+        )
+
+        (target as Navigatable).navigate(true)
+
+        val editor = FileEditorManager.getInstance(project).selectedTextEditor
+        assertNotNull(editor)
+        assertEquals(2, editor!!.caretModel.logicalPosition.line)
     }
 
     fun testMarkdownFilePathReferenceIncludesLineAndColumnSuffix() {
