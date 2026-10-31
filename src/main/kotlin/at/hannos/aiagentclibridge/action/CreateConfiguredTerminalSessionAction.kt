@@ -1,9 +1,11 @@
 package at.hannos.aiagentclibridge.action
 
 import at.hannos.aiagentclibridge.config.AiAgentCliBridgeSettings
+import at.hannos.aiagentclibridge.terminal.HerdrWorkspaceLauncher
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
@@ -49,9 +51,20 @@ class CreateConfiguredTerminalSessionAction : AnAction() {
             .requestFocus(true)
             .deferSessionStartUntilUiShown(true)
             .createTab()
-        toolWindowTab.view.createSendTextBuilder().shouldExecute().send(launchProgram)
         toolWindowTab.view.title.change {
             userDefinedTitle = terminalTitle
+        }
+        if (launchProgram.trim() == "herdr") {
+            ApplicationManager.getApplication().executeOnPooledThread {
+                val command = HerdrWorkspaceLauncher.prepareCommand(project, launchProgram)
+                ApplicationManager.getApplication().invokeLater {
+                    if (!project.isDisposed && toolWindowTab.content.isValid) {
+                        toolWindowTab.view.createSendTextBuilder().shouldExecute().send(command)
+                    }
+                }
+            }
+        } else {
+            toolWindowTab.view.createSendTextBuilder().shouldExecute().send(launchProgram)
         }
     }
 

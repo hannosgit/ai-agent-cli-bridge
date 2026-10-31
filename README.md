@@ -73,6 +73,16 @@ Open *Settings → Tools → AI Agent CLI Bridge* to configure:
 - Tool‑specific reference formatting
 - Other behavior of the plugin actions
 
+When the launch command is `herdr`, the plugin looks for an existing Herdr space matching
+the project directory and focuses it before opening the TUI. This supports WSL terminals
+(including a selected distribution and user), Bash, and Zsh. Matching uses checkout and
+pane directories rather than space labels. With the configured terminal still open,
+returning to the IntelliJ project window also switches Herdr back to that project's space,
+including after selecting a different space in another terminal. The switch runs in the
+background without sending command text into the running TUI.
+If no unique match is found or Herdr is unavailable, startup proceeds normally and
+no automatic focus change is made. No space is created automatically.
+
 ## Usage
 
 1. Configure your AI CLI tool under *Settings → Tools → AI Agent CLI Bridge*.

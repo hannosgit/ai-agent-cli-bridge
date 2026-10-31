@@ -67,6 +67,12 @@
                 implementation="at.hannos.aiagentclibridge.markdown.MarkdownFilePathGotoDeclarationHandler"/>
     </extensions>
 
+    <applicationListeners>
+        <listener
+                class="at.hannos.aiagentclibridge.terminal.HerdrProjectActivationListener"
+                topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+    </applicationListeners>
+
     <actions>
         <action id="at.hannos.aiagentclibridge.action.CreateConfiguredTerminalSessionAction"
                 class="at.hannos.aiagentclibridge.action.CreateConfiguredTerminalSessionAction"

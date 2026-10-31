@@ -115,8 +115,6 @@ relative + absolute paths with optional `:line` and `:line:column` suffixes.
 
 - Keep changes focused and minimal; do not perform unrelated refactors.
 - Do not commit on behalf of the user unless explicitly asked.
-- When a commit is requested, add Junie as co-author via the trailer flag, e.g.
-  `git commit -m "..." --trailer "Co-authored-by: Junie <junie@jetbrains.com>"`.
 
 ## Safety & scope
 
