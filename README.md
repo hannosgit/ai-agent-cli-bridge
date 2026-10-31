@@ -2,7 +2,7 @@
 
 An IntelliJ Platform plugin that seamlessly connects your IDE workflow with terminal-based AI coding tools
 (such as [Claude Code](https://www.anthropic.com/claude-code), [OpenAI Codex CLI](https://github.com/openai/codex),
-[Pi](https://pi.dev/), [Junie CLI](https://www.jetbrains.com/junie/), and similar agents).
+[Pi](https://pi.dev/), and similar agents).
 
 It launches a preconfigured AI terminal session inside the IDE and lets you send rich context
 (selections, file/folder references, errors, VCS changes) straight into your AI CLI tool — using
@@ -39,7 +39,6 @@ for the exact formats:
 | Claude Code | `@src/main/File.kt`, `@src/main/File.kt#L22-24`             |
 | Codex       | `src/main/kotlin/.../AiTerminal.kt:21-23`                   |
 | Pi          | `src/main/kotlin/.../AiTerminal.kt` / `...:21-23`           |
-| Junie       | (see `tools.md`)                                            |
 
 ## Requirements
 
